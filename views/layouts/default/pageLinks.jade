@@ -1,0 +1,13 @@
+mixin pageLink(page, current)
+	li 
+		- if (page.id == current)
+			#{page.title}
+		- else
+			a(href="/#{node.id}/#{page.id}") #{page.title}
+
+mixin pageLinkList(pages)
+	ul
+		each page in pages
+			mixin pageLink(page)
+
+mixin pageLinkList(pageLinks.pages, pageLinks.current)

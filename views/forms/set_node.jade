@@ -1,0 +1,36 @@
+extends ../layouts/default/narrow
+	
+block main
+
+	mixin inputText(name, text)
+		label.control-label(for="input_#{name}") #{text}
+		.controls
+			input(type="text", id="input_#{name}", name="node[#{name}]", value="#{node[name]}")
+			span.help-inline #{errors[name]}
+				
+	mixin inputControl(name, text)
+		- if (errors[name])
+			.control-group.error
+				mixin inputText(name, text)
+		- else
+			.control-group
+				mixin inputText(name, text)
+	
+	
+	form.form-horizontal(action='/set/#{node.id}', method='post')
+		
+		mixin inputControl('id', 'id')
+		mixin inputControl('email', '邮箱')
+		mixin inputControl('readPassword', '访问密码')
+		mixin inputControl('adminPassword', '管理密码')
+		
+		.control-group
+			.controls
+				label.checkbox
+					input(type="checkbox", name="node[isFrozen]", checked=node.isFrozen) 
+					|  锁定
+				button.btn.btn-primary(type='submit') 保存
+				
+		input(type='hidden', name='node[_id]', value="#{node._id}")
+		input(type="hidden", name="_csrf", value="#{token}")
+				

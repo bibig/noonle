@@ -1,0 +1,46 @@
+extends ../layout/narrow
+
+
+	
+block main
+
+	- var actionUrl
+	- if (action == 'create')
+		actionUrl = '/new'
+	- else
+		actionUrl = '/edit'
+
+	form(action='#{actionUrl}', method='post')
+		fieldset
+			legend i m legend
+			label 标题
+			input.input-block-level(type='text', name='node[title]', value="#{node.title}")
+			// span.help-block Example block-level help text here.
+			label 内容
+			textarea.input-block-level(name='node[content]', rows='20')
+				!= node.content
+				
+			- var normalRadio
+			- var mdRadio
+			- if (node.format == 0)
+				normalRadio = true
+				mdRadio = false
+			- else
+				normalRadio = false
+				mdRadio = true
+				
+			.row-fluid
+				.span9
+					label.radio
+						input(type="radio", name="entity[format]", value='0', checked=normalRadio) 
+						| 普通文本
+					label.radio
+						input(type="radio", name="node[format]", value='1', checked=mdRadio) 
+						| markdown文本	
+				.span3
+					button.btn.btn-large.btn-block.btn-primary(type='submit') 发布
+			
+			- if (node.id !== '')
+				input(type='hidden', name='node[id]', value="#{node.id}")
+	
+

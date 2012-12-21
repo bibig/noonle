@@ -1,0 +1,17 @@
+extends ../layouts/default/narrow
+	
+block main
+	- if (error)
+		.alert.alert-error
+			= error
+	
+	form.form-inline(action='/auth', method='post')
+		.input-prepend.input-append
+			span.add-on
+				i.icon-lock
+			input.span2(type="password", name="password")
+			button.btn(type="submit") 提交
+			input(type="hidden", name="id", value="#{id}")
+			input(type="hidden", name="type", value="#{type}")
+			input(type="hidden", name="from", value="#{from}")
+			input(type="hidden", name="_csrf", value="#{token}")

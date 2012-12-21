@@ -1,0 +1,49 @@
+
+mixin errorItem(item)
+	li= item
+
+mixin errorBlock(errors)
+	.alert.alert-error
+		ul
+			each error in errors
+				mixin errorItem(error)
+	
+- if (!noError)
+	- console.log(errors)
+	mixin errorBlock(errors)
+
+form(action='#{entity.action}', method='post')
+	fieldset
+		legend i m legend
+		// span.help-block Example block-level help text here.
+		textarea.input-block-level(name='entity[content]', rows='30')
+			!= entity.content
+			
+		- var normalRadio
+		- var mdRadio
+		- if (entity.format == 0)
+			normalRadio = true
+			mdRadio = false
+		- else
+			normalRadio = false
+			mdRadio = true
+			
+		.row-fluid
+			.span4
+				label.radio
+					input(type="radio", name="entity[format]", value='0', checked=normalRadio) 
+					| 普通文本
+				label.radio
+					input(type="radio", name="entity[format]", value='1', checked=mdRadio) 
+					| markdown文本	
+			.span5
+				.input-prepend
+					span.add-on 标题
+					input(type='text', name='entity[title]', value="#{entity.title}")
+			.span3
+				button.btn.btn-block.btn-primary(type='submit') 发布
+		
+		input(type='hidden', name='_csrf', value="#{token}")
+		- if ( entity.hiddens )
+			each hidden in entity.hiddens
+				input(type='hidden', name='entity[#{hidden.name}]', value="#{hidden.value}")

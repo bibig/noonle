@@ -1,0 +1,13 @@
+
+h1 #{entity.title} 
+!= entity.content
+h6
+	| 发布于:
+	= entity.created
+	|  
+	span.label #{entity.hit}
+
+- if (entity.modified)
+	h6
+		| 最后更新:
+		= entity.modified

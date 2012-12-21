@@ -1,0 +1,5 @@
+extends ../layouts/default/narrow
+	
+block main
+	- var entity = { action: '/create/' + node.id, title: node.title, content: node.content, format: '0', errors: errors }
+	include entity

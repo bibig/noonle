@@ -1,0 +1,5 @@
+extends ../layouts/default/narrow
+	
+block main
+	- var entity = { action: '/edit/' + nid + '/' + page.id, hiddens: [{name: '_id', value: page._id} , {name: 'id', value: page.id}], title: page.title, content: page.content, format: page.format }
+	include entity

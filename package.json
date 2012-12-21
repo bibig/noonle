@@ -1,0 +1,27 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "author"      : "bibig <bibig@me.com>",
+  "homepage"    : "http://github.com/bibig/noonle",
+  "private": true,
+  "scripts": {
+    "start": "node app",
+    "test": "make test"
+  },
+  "dependencies": {
+    "express": "3.0.3",
+    "jade": "*",
+    "less": "*",
+    "marked": "*",
+    "mocha": "*",
+    "zombie": "*",
+    "bbcode": "*",
+    "moment": "*",
+    "sanitizer": "0.0.15",
+    "validator": "*",
+    "express-validator": "*",
+    "cookie": "*",
+    "cookie-signature": "*",
+    "connect-flash": "*"
+  }
+}

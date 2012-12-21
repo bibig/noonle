@@ -1,0 +1,12 @@
+extends ./narrow
+
+block main
+	h4
+		| > 
+		a(href="/#{page.node.id}") #{page.node.title}
+	- var entity = { title: page.title, content: page.content, hit:page.hit, created: page.created, modified: page.modified }
+	include entity
+	
+	- if (isAdmin) 
+		a(href="/edit/#{page.node.id}/#{page.id}") 编辑 
+		a(href="/set/#{page.node.id}/#{page.id}") 设置

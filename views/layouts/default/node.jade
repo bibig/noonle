@@ -1,0 +1,16 @@
+extends ./narrow
+
+block main
+	- var entity = { title: node.title, content: node.content, hit:node.hit, created: node.created, modified: node.modified }
+	include entity
+	
+	- var pageLinks = { pages: node.pages, current: ''}
+	include pageLinks
+	
+	
+		
+	- if (isAdmin)
+		- if ( !node.isFrozen )
+			a(href="/new/#{node.id}") 新页面 
+		a(href="/edit/#{node.id}") 编辑 
+		a(href="/set/#{node.id}") 设置
