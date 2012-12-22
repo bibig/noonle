@@ -32,7 +32,7 @@ function create (req, res) {
  *  including `about` page, `doc` page, `help` page etc.
  */
 function index (req, res, next) {
-	res.redirect('/index');
+	res.redirect('/hello');
 }
 
 /**
@@ -85,6 +85,15 @@ function saveCreate (req, res) {
 			if (err) {
 				console.log('save failed!');
 			} else {
+				// console.log(node);
+				/*
+				if (node.adminPassword) {
+					authorize.saveAdminCookie(res, node.id, node.adminPassword);
+				}
+				if (node.readPassword) {
+					authorize.saveAdminCookie(res, node.id, node.readPassword);
+				}
+				*/
 				res.redirect('/' + node.id);
 			}
 		});

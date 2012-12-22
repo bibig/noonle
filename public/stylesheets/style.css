@@ -1,7 +1,12 @@
+body {
+  background-color: #DBE5EB;
+}
 /* Custom container */
 .container-narrow {
   margin: 0 auto;
   max-width: 700px;
+  background-color: #fff;
+  padding: 30px 20px;
 }
 .container-narrow hr {
   margin: 30px 0;
@@ -25,4 +30,12 @@
 }
 .marketing p + h4 {
   margin-top: 28px;
+}
+.foot {
+  text-align: center;
+  margin: 30px 10px;
+}
+.head {
+  line-height: 20px;
+  height: 20px;
 }
