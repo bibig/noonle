@@ -1,6 +1,10 @@
 body {
   background-color: #DBE5EB;
 }
+.huge {
+  font-size: 72px;
+  line-height: 1;
+}
 /* Custom container */
 .container-narrow {
   margin: 0 auto;
