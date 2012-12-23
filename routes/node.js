@@ -56,7 +56,7 @@ function read (req, res, next) {
 			parser = require("bbcode");
 			break;
 	}
-	moment.lang('zh-CN');
+	moment.lang('zh-cn');
 	res.render('layouts/default/node', { 
 		title: node.title,
 		isAdmin: authorize.isAdmin(req),
