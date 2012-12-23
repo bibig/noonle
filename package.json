@@ -22,6 +22,7 @@
     "express-validator": "*",
     "cookie": "*",
     "cookie-signature": "*",
-    "connect-flash": "*"
+    "connect-flash": "*",
+    "mongoose": "*"
   }
 }
