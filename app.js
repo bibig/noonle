@@ -50,14 +50,15 @@ app.configure(function(){
 
 app.configure('development', function(){
   
+  /*
   app.use(function(err, req, res, next){
     console.error(err);
     res.send('Fail Whale, yo.');
   });
-  
-    
-    // app.use(express.errorHandler());
+  */
+  app.use(express.errorHandler());
 });
+
 
 // $ curl http://localhost:3000/notfound
 // $ curl http://localhost:3000/notfound -H "Accept: application/json"
