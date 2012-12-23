@@ -32,7 +32,7 @@ function read (req, res, next) {
 			break;
 	}
 	
-	moment.lang('zh-CN');
+	moment.lang('zh-cN');
 	res.render('layouts/default/page', { 
 		title: page.title,
 		isAdmin: authorize.isAdmin(req),
