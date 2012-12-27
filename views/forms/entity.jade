@@ -14,7 +14,11 @@ mixin errorBlock(errors)
 
 form(action='#{entity.action}', method='post')
 	fieldset
-		legend i m legend
+		.row-fluid
+			.span12
+				.input-prepend
+					span.add-on 标题
+					input.input-xlarge(type='text', name='entity[title]', value="#{entity.title}")
 		// span.help-block Example block-level help text here.
 		textarea.input-block-level(name='entity[content]', rows='30')
 			!= entity.content
@@ -29,18 +33,14 @@ form(action='#{entity.action}', method='post')
 			mdRadio = true
 			
 		.row-fluid
-			.span4
+			.span8
 				label.radio
 					input(type="radio", name="entity[format]", value='0', checked=normalRadio) 
 					| 普通文本
 				label.radio
 					input(type="radio", name="entity[format]", value='1', checked=mdRadio) 
-					| markdown文本	
-			.span5
-				.input-prepend
-					span.add-on 标题
-					input(type='text', name='entity[title]', value="#{entity.title}")
-			.span3
+					| markdown文本
+			.span4
 				button.btn.btn-block.btn-primary(type='submit') 发布
 		
 		input(type='hidden', name='_csrf', value="#{token}")

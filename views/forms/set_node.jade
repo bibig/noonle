@@ -17,12 +17,30 @@ block main
 				mixin inputText(name, text)
 	
 	
+	- var sortByCreated = false
+	- var sortById = false
+	- if (node.sort === 1)
+		sortById = true
+	- else
+		sortByCreated = true
+	
+	
 	form.form-horizontal(action='/set/#{node.id}', method='post')
 		
 		mixin inputControl('id', 'id')
 		mixin inputControl('email', '认领邮箱')
 		mixin inputControl('readPassword', '访问密码')
 		mixin inputControl('adminPassword', '管理密码')
+		
+		.control-group
+			label.control-label 排序方式
+			.controls
+				label.radio
+					input(type="radio", name="node[sort]", value='0', checked=sortByCreated) 
+					| 发布时间
+				label.radio
+					input(type="radio", name="node[sort]", value='1', checked=sortById) 
+					| id
 		
 		.control-group
 			.controls

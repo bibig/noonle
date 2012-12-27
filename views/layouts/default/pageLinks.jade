@@ -3,11 +3,12 @@ mixin pageLink(page, current)
 		- if (page.id == current)
 			#{page.title}
 		- else
-			a(href="/#{node.id}/#{page.id}") #{page.title}
+			a(href="/#{node.id}/#{page.id}", target="_blank") #{page.title}
 
 mixin pageLinkList(pages)
-	ul
-		each page in pages
-			mixin pageLink(page)
+	.paper-catalog
+		ul
+			each page in pages
+				mixin pageLink(page)
 
 mixin pageLinkList(pageLinks.pages, pageLinks.current)

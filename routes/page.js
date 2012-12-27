@@ -9,6 +9,7 @@ var Yi = require('../lib/yi')
   , sanitizer = require('sanitizer')
   , load = require('../lib/load')
   , form = require('../lib/form')
+  , style = require('../lib/style')
   , authorize = require('../lib/authorize')
   , validator = require('../lib/common_validator')
   , Page = require('../models/page');
@@ -36,6 +37,7 @@ function read (req, res, next) {
 	res.render('layouts/default/page', { 
 		title: page.title,
 		isAdmin: authorize.isAdmin(req),
+		design: style.make(req),
 		page: {
 			id: page.id,
 			node: node,
@@ -50,7 +52,9 @@ function read (req, res, next) {
 };
 
 function create (req, res) {
-	res.redirect('/' + load.fetch(req, 'node', 'id') + '/' + Yi.randomString(8));
+	// res.redirect('/' + load.fetch(req, 'node', 'id') + '/' + Yi.randomString(4));
+	var id = load.fetch(req, 'node', 'pageCount') + 1;
+	res.redirect('/' + load.fetch(req, 'node', 'id') + '/' + id);
 };
 
 function saveCreate (req, res) {
@@ -106,8 +110,8 @@ function saveSet (req, res, next) {
 		form.page(req, res); 
 	};
 	var saveCb = function () { 
-		console.log('im in saveCb'); 
-		Page.saveSettings(data, callback);
+		// console.log('im in saveCb'); 
+		Page.saveSettings(data._id, data, callback);
 	};
 	
 	if (req.validator.pass()) {

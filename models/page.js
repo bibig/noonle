@@ -13,7 +13,7 @@ var Yi = require('../lib/yi')
   , Page = db.Page;
   
 function create (node, data, callback) {
-	page = new Page({
+	var page = new Page({
 		id: data.id,
 		title: data.title,
 		content: data.content,
@@ -39,8 +39,8 @@ function create (node, data, callback) {
 	});
 };
 
-function saveContent (data, callback) {
-	Page.update({ _id: data._id }, {
+function saveContent (_id, data, callback) {
+	Page.update({ _id: _id }, {
 			title: data.title,
 			content: data.content,
 			size: data.content.length,
@@ -50,8 +50,8 @@ function saveContent (data, callback) {
 	);
 }
 
-function saveSettings (data, callback) {
-	Page.update({ _id: data._id }, { id: data.id }, callback);
+function saveSettings (_id, data, callback) {
+	Page.update({ _id: _id }, { id: data.id }, callback);
 }
 
 
@@ -111,16 +111,9 @@ function readonly (_node, id, callback) {
 	});
 }
 
-function hit (page, callback) {
-	page.hit++;
-	page.save(function (err) {
-		if (err) {
-			callback(err);	
-		} else {
-			callback(null);
-		}
-	});
-};
+function hit (page) {
+	Page.update({ _id: page._id }, { hit: page.hit + 1 });
+}
 
 function remove (page, callback) {
 

@@ -1,0 +1,62 @@
+extends ./narrow
+
+block design
+	style(type="text/css")
+		#{design}
+
+block asserts
+	script(src='/asserts/javascripts/theme.color.js')
+
+block main
+	mixin themeBlocks(themes)
+		ul.themes-list
+			each theme in themes
+				mixin themeBlock(theme)
+				
+	mixin themeBlock(theme)
+		li.theme-card
+			.mini-paper(style="background-color: #{theme.backgroundColor}", onclick="preview(this, #{theme.id})")
+				.paper-title(style="background-color: #{theme.bgOfTitle};color: #{theme.fgOfTitle}; a color: #{theme.anchorInTitle}")
+					| ##{theme.id}
+				.paper-content(style="background-color: #{theme.bgOfContent}; color: #{theme.fgOfContent}; a color: #{theme.anchorInTitle}")
+					| #{theme.name}
+				.paper-foot(style="background-color: #{theme.bgOfFoot}; color: #{theme.fgOfFoot}; a color: #{theme.anchorInFoot}")
+	
+	.themes-container
+		mixin themeBlocks(themes)
+	.saveThemeForm
+		form(id="save", action="/design/#{node.id}/use/theme/", method="post")
+			input(type="hidden", name="_csrf", value="#{token}")
+			input(type="hidden", name="tid")
+			button.btn.btn-block.btn-success.btn-large.disabled(type="submit", disabled="disabled") 保存样式
+		
+	- var nodeBox = {node: node, isAdmin: isAdmin}
+	include nodeBox
+			
+	
+	script
+		$(document).ready( function () {
+			var bodyheight = $(document).height() - 50;
+			$("themes-container").height(bodyheight);
+			
+		
+			// for the window resize
+			$(window).resize(function() {
+				var bodyheight = $(document).height() - 50;
+				$("themes-container").height(bodyheight);
+			});
+			
+			darkCatalog();
+			
+		});
+		
+		function preview (me, id) {
+			$('button[type="submit"]', "#save").removeProp('disabled').removeClass('disabled');
+			$('input[name="tid"]', "#save").val(id);
+			$("body").css('background-color', $(me).css('background-color'));
+			console.log($(".paper-title", me).css('background-color'));
+			console.log($(".paper-content", me).css('background-color'));
+			console.log($(".paper-foot", me).css('background-color'));
+			copyColor(me, ['.paper-title', '.paper-content', '.paper-foot']);
+			darkCatalog();
+		}

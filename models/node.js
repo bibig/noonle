@@ -1,6 +1,7 @@
 exports.create = create;
 exports.saveContent = saveContent;
 exports.saveSettings = saveSettings;
+exports.saveTheme = saveTheme;
 exports.read = read;
 exports.readonly = readonly;
 exports.readWithPages = readWithPages;
@@ -12,8 +13,6 @@ var Yi = require('../lib/yi')
   , db = require('./db')
   , Node = db.Node
   , Page = db.Page;
-
-// db.conn.on('error', console.error.bind(console, 'connection error:'));
 
 function create (data, callback) {
 	var node = new Node({ 
@@ -53,7 +52,24 @@ function saveSettings (_id, data, callback) {
 			email: data.email,
 			readPassword: data.readPassword,
 			adminPassword: data.adminPassword,
-			isFrozen: (data.isFrozen == 'on' ? true : false)
+			sort: data.sort
+			// isFrozen: (data.isFrozen === 'on' ? true : false)
+		}, callback
+	);
+}
+
+function saveTheme (id, theme, callback) {
+	Node.update({ id: id }, {
+			backgroundColor: theme.backgroundColor,
+			bgOfTitle: theme.bgOfTitle,
+			fgOfTitle: theme.fgOfTitle,
+			anchorInTitle: theme.anchorInTitle,
+			bgOfContent: theme.bgOfContent,
+			fgOfContent: theme.fgOfContent,
+			anchorInContent: theme.anchorInContent,
+			bgOfFoot: theme.bgOfFoot,
+			fgOfFoot: theme.fgOfFoot,
+			anchorInFoot: theme.anchorInFoot
 		}, callback
 	);
 }
@@ -110,7 +126,7 @@ function readonly (id, callback) {
 		if (err) {
 			callback(err);
 		} else {
-				callback(null, node);
+			callback(null, node);
 		}
 	});
 }
@@ -118,7 +134,7 @@ function readonly (id, callback) {
 function readWithPages (id, callback) {
 	Node
 	.findOne({ id: id })
-	.populate('_pages', 'id title')
+	.populate('_pages', 'id title created')
 	.exec(function (err, node) {
 		if (err) {
 			callback(err);
@@ -129,16 +145,9 @@ function readWithPages (id, callback) {
 	
 };
 
-function hit (node, callback) {
-	node.hit++;
-	node.save(function (err) {
-		if (err) {
-			callback(err);	
-		} else {
-			callback(null);
-		}
-	});
-};
+function hit (node) {
+	Node.update({ _id: node._id }, { hit: node.hit + 1 });
+}
 
 function remove (id, callback) {
 	// console.log('ready to remove node:' + id);

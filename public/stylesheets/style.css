@@ -1,19 +1,96 @@
 body {
   background-color: #DBE5EB;
+  /*background: url(/asserts/images/bg/1.png);*/
+
 }
 .huge {
   font-size: 72px;
   line-height: 1;
 }
+.clear {
+  clear: both;
+}
+.paper {
+  background-color: #fff;
+  margin-top: 30px;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+}
+.paper .paper-title {
+  padding: 10px 20px;
+}
+.paper .node-title {
+  height: 50px;
+  line-height: 50px;
+  font-size: 32px;
+  font-weight: bold;
+}
+.paper .page-title {
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.paper .paper-content {
+  padding: 30px;
+  min-height: 300px;
+}
+.paper .paper-catalog {
+  padding: 20px;
+}
+.paper .paper-foot {
+  height: 30px;
+  line-height: 30px;
+  padding: 0 20px;
+  text-align: right;
+}
+.saveThemeForm {
+  background: #fff;
+  position: fixed;
+  width: 200px;
+  padding: 0 10px;
+  height: 50px;
+  left: 0;
+  bottom: 0;
+}
+.themes-container {
+  background: #fff;
+  position: fixed;
+  width: 200px;
+  padding: 20px 10px;
+  left: 0;
+  top: 0;
+  bottom: 50px;
+  overflow: auto;
+}
+.themes-container ul.themes-list li.theme-card {
+  list-style: none;
+  width: 140px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+.themes-container ul.themes-list li.theme-card .mini-paper {
+  padding: 20px;
+}
+.themes-container ul.themes-list li.theme-card .mini-paper .paper-title {
+  padding: 2px 4px;
+  font-size: 10px;
+  font-weight: bold;
+  height: 20px;
+}
+.themes-container ul.themes-list li.theme-card .mini-paper .paper-content {
+  padding: 5px;
+  font-size: 8px;
+  height: 60px;
+}
+.themes-container ul.themes-list li.theme-card .mini-paper .paper-foot {
+  height: 10px;
+}
 /* Custom container */
 .container-narrow {
   margin: 0 auto;
-  max-width: 700px;
-  background-color: #fff;
-  padding: 30px 20px;
-}
-.container-narrow hr {
-  margin: 30px 0;
+  max-width: 760px;
 }
 /* Main marketing message and sign up button */
 .jumbotron {

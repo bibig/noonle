@@ -1,14 +1,19 @@
 extends ./narrow
 
+block design
+	style(type="text/css")
+		#{design}
+		
 block main
-	h4
-		| > 
-		a(href="/#{page.node.id}") #{page.node.title}
-	hr
-	- var entity = { title: page.title, content: page.content, hit:page.hit, created: page.created, modified: page.modified }
-	include entity
-	
-	- if (isAdmin) 
-		hr
-		a(href="/edit/#{page.node.id}/#{page.id}") 编辑 
-		a(href="/set/#{page.node.id}/#{page.id}") 设置
+	.paper
+		.paper-title.page-title
+			a(href="/#{page.node.id}") #{page.node.title} 
+			> #{page.title} 			
+		.paper-content
+			!= page.content
+		.paper-foot
+			- if (isAdmin) 
+				a(href="/edit/#{page.node.id}/#{page.id}") 编辑 
+				a(href="/set/#{page.node.id}/#{page.id}") 设置
+			- else
+				a(href="/auth/admin/#{node.node.id}") 管理

@@ -4,13 +4,17 @@ exports.create = create;
 exports.save = saveCreate;
 exports.update = saveEdit;
 exports.set = saveSet;
+exports.design = design;
+exports.useTheme = useTheme;
 // exports.test = test;
 
 var Yi = require('../lib/yi')
   , Node = require('../models/node')
+  , Theme = require('../models/theme')
   , sanitizer = require('sanitizer')
   , form = require('../lib/form')
   , load = require('../lib/load')
+  , style = require('../lib/style')
   , authorize = require('../lib/authorize')
   , validator = require('../lib/common_validator');
  
@@ -32,7 +36,7 @@ function create (req, res) {
  *  including `about` page, `doc` page, `help` page etc.
  */
 function index (req, res, next) {
-	res.redirect('/hello');
+	res.redirect(load.rootId());
 }
 
 /**
@@ -41,11 +45,21 @@ function index (req, res, next) {
  * it's authorized and fetched the data from db.
  */
 function read (req, res, next) {
-	var moment = require('moment');
 	var parser;
 	var node = load.fetch(req, 'node');
 	// console.log('ready to read node: ' + node.id);
 	// console.log(node);
+	res.render('layouts/default/node', { 
+		title: node.title,
+		isAdmin: authorize.isAdmin(req),
+		design: style.make(req),
+		node: getNodeForRead(node)
+	});
+};
+
+function getNodeForRead (node) {
+	var moment = require('moment');
+	
 	switch (node.format) { 
 		case 1: //marked
 			// console.log('ready using marked');
@@ -57,22 +71,19 @@ function read (req, res, next) {
 			break;
 	}
 	moment.lang('zh-cn');
-	res.render('layouts/default/node', { 
-		title: node.title,
-		isAdmin: authorize.isAdmin(req),
-		node: {
-			id: node.id,
-			hit: node.hit,
-			isFrozen: node.isFrozen,
-			title: sanitizer.escape(node.title),
-			content: parser.parse(sanitizer.sanitize(node.content, function (u) { return u;})),
-			created: moment(node.created).format('LLL'),
-			modified: (node.created < node.modified ? moment(node.modified).calendar() : null),
-			pages: node._pages
-		}
-	});
 	
-};
+	return {
+		id: node.id,
+		hit: node.hit,
+		title: sanitizer.escape(node.title),
+		content: parser.parse(sanitizer.sanitize(node.content, function (u) { return u;})),
+		created: moment(node.created).format('LLL'),
+		modified: (node.created < node.modified ? moment(node.modified).calendar() : null),
+		pages: node._pages,
+		pageCount: node.pageCount
+	};
+}
+
 
 /**
  * save the new created node
@@ -86,14 +97,6 @@ function saveCreate (req, res) {
 				console.log('save failed!');
 			} else {
 				// console.log(node);
-				/*
-				if (node.adminPassword) {
-					authorize.saveAdminCookie(res, node.id, node.adminPassword);
-				}
-				if (node.readPassword) {
-					authorize.saveAdminCookie(res, node.id, node.readPassword);
-				}
-				*/
 				res.redirect('/' + node.id);
 			}
 		});
@@ -160,7 +163,7 @@ function saveSet (req, res, next) {
 		form.node(req, res); 
 	};
 	
-	var saveCb = function () { 
+	var saveCb = function () {
 		Node.saveSettings(data._id, data, callback);
 	};
 	
@@ -176,3 +179,35 @@ function saveSet (req, res, next) {
 	}
 	
 };
+
+function design (req, res, next) {
+	
+	Theme.findAll(function (err, themes) {
+		if (err) {
+			next(err);
+		} else {
+			form.csrf(req, res);
+			// console.log('find themes!');
+			// console.log(load.fetch(req, 'node'));
+			res.render('layouts/default/themes', {
+				isAdmin: authorize.isAdmin(req),
+				design: style.make(req),
+				title: 'themes list',
+				themes: themes,
+				node: getNodeForRead(load.fetch(req, 'node'))
+			});
+		}	
+	});
+}
+
+function useTheme (req, res, next) {
+	var nid = load.fetch(req, 'node', 'id');
+	Theme.read(req.body.tid, function (err, theme) {
+		if (err) return next(err);
+		Node.saveTheme(nid, theme, function (err) {
+			if (err) return next(err);
+			res.redirect('/' + nid);
+		});
+	})
+	
+}

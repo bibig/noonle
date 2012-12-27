@@ -23,6 +23,7 @@
     "cookie": "*",
     "cookie-signature": "*",
     "connect-flash": "*",
+    "color": "*",
     "mongoose": "*"
   }
 }
