@@ -1,16 +1,31 @@
-function copyColor (me, items) {
-	for (var i = 0; i< items.length; i++) {
-		$(items[i], ".paper").css('background-color', $(items[i], me).css('background-color'));
-	}
-}
-
+/*
 function darkCatalog () {
 	var bgOfContent = rgb2hex($(".paper-content", ".paper").css('background-color'));
 	$(".paper-catalog", ".paper").css('background-color', shadeColor(bgOfContent, -3));
 	// console.log(shadeColor(bgOfContent, -3));
 }
+*/
+
+function getBackground($dom) {
+	// Is current element's background color set?
+	var color = $dom.css("background-color");
+	if ((color !== 'rgba(0, 0, 0, 0)') && (color !== 'transparent')) {
+		// if so then return that color
+		return color;
+	}
+
+	// if not: are you at the body element?
+	if ($dom.is("body")) {
+		// return known 'false' value
+		return false;
+	} else {
+		// call getBackground with parent item
+		return getBackground($dom.parent());
+	}
+}
 
 function rgb2hex (rgb) {
+	if (!rgb) return '';
 	rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
 	function hex(x) {
 		return ("0" + parseInt(x).toString(16)).slice(-2);

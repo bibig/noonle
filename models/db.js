@@ -36,7 +36,8 @@ module.exports = function () {
 			_pages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Page' }],
 			pageCount: { type:Number, default: 0 },
 			size: { type:Number, default: 0 },
-			// style
+			css: { type: String, default: '' },
+			/*
 			backgroundColor: { type: String, default: '' }, 
 			backgroundImage: { type: String, default: '' }, 
 			backgroundRepeat: { type: String, default: '' }, 
@@ -56,7 +57,7 @@ module.exports = function () {
 			anchorInFoot: { type: String, default: '#222' },
 			
 			extraCss: { type: String, default: '' }, 
-			
+			*/
 			created: { type: Date, default: Date.now },
 			modified: { type: Date, default: Date.now }
 		})

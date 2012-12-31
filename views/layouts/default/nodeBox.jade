@@ -4,27 +4,21 @@
 	.paper-title.node-title #{node.title}
 	.paper-content
 		!= node.content
-	//- 
-		h6
-			| 发布于:
-			= node.created
-			|  
-			span.label #{node.hit}
 		
-		- if (node.modified)
-			h6
-				| 最后更新:
-				= node.modified
-	
 	- if (node.pageCount > 0)
 		- var pageLinks = { pages: node.pages, current: ''}
 		include pageLinks
 		
 	.paper-foot
-		- if (isAdmin)
-			a(href="/new/#{node.id}") 子页面 
-			a(href="/edit/#{node.id}") 编辑 
-			a(href="/set/#{node.id}") 设置  
-			a(href="/design/#{node.id}/themes") 设计
-		- else
-			a(href="/auth/admin/#{node.id}") 管理
+		.row-fluid
+			.span6.date
+				i 发布于: 
+				= node.modified
+			.span6.options
+				- if (isAdmin)
+					a(href="/new/#{node.id}") 子页面 
+					a(href="/edit/#{node.id}") 编辑 
+					a(href="/set/#{node.id}") 设置  
+					a(href="/design/#{node.id}/themes") 设计
+				- else
+					a(href="/auth/admin/#{node.id}") 管理

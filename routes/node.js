@@ -5,7 +5,7 @@ exports.save = saveCreate;
 exports.update = saveEdit;
 exports.set = saveSet;
 exports.design = design;
-exports.useTheme = useTheme;
+exports.saveDesign = saveDesign;
 // exports.test = test;
 
 var Yi = require('../lib/yi')
@@ -52,7 +52,7 @@ function read (req, res, next) {
 	res.render('layouts/default/node', { 
 		title: node.title,
 		isAdmin: authorize.isAdmin(req),
-		design: style.make(req),
+		design: style.css(req),
 		node: getNodeForRead(node)
 	});
 };
@@ -77,8 +77,9 @@ function getNodeForRead (node) {
 		hit: node.hit,
 		title: sanitizer.escape(node.title),
 		content: parser.parse(sanitizer.sanitize(node.content, function (u) { return u;})),
-		created: moment(node.created).format('LLL'),
-		modified: (node.created < node.modified ? moment(node.modified).calendar() : null),
+		// created: moment(node.created).format('LL'),
+		// modified: (node.created < node.modified ? moment(node.modified).calendar() : null),
+		modified: moment(node.modified).format('LLL'),
 		pages: node._pages,
 		pageCount: node.pageCount
 	};
@@ -181,33 +182,67 @@ function saveSet (req, res, next) {
 };
 
 function design (req, res, next) {
+	var async = require('async');
 	
-	Theme.findAll(function (err, themes) {
-		if (err) {
-			next(err);
-		} else {
-			form.csrf(req, res);
-			// console.log('find themes!');
-			// console.log(load.fetch(req, 'node'));
-			res.render('layouts/default/themes', {
-				isAdmin: authorize.isAdmin(req),
-				design: style.make(req),
-				title: 'themes list',
-				themes: themes,
-				node: getNodeForRead(load.fetch(req, 'node'))
-			});
-		}	
+	function getThemes (callback) {
+		Theme.findAll(function (err, themes) {
+			if (err) {
+				callback(err);
+			} else {
+				// console.log('find themes!');
+				// console.log(load.fetch(req, 'node'));
+				form.csrf(req, res);
+				callback(null, themes);
+			}	
+		});	
+	}
+	function getPatterns (callback) { 
+		var local = './public/images/patterns';
+		var fs = require('fs');
+		fs.readdir(local, function (err, names) {
+			if (err) {
+				callback(err);
+			} else {
+				console.log('find patterns');
+				names.splice(0, 1)
+				console.log(names);
+				callback(null, names);
+			}
+		});
+	}
+	async.parallel([getThemes, getPatterns], function (err, datas) {
+		if (err) return next(err);
+		
+		res.render('layouts/default/themes', {
+			isAdmin: authorize.isAdmin(req),
+			design: style.css(req),
+			// current: style.json(req),
+			title: 'themes list',
+			themes: datas[0],
+			patterns: datas[1],
+			node: getNodeForRead(load.fetch(req, 'node'))
+		});
 	});
 }
 
-function useTheme (req, res, next) {
+function saveDesign (req, res, next) {
 	var nid = load.fetch(req, 'node', 'id');
-	Theme.read(req.body.tid, function (err, theme) {
+	/*var theme = {};
+	['backgroundImage', 'backgroundRepeat', 'backgroundColor', 'bgOfTitle', 'bgOfContent', 'bgOfFoot', 'fgOfTitle', 'fgOfContent', 'fgOfFoot', 'anchorInTitle', 'anchorInContent', 'anchorInFoot']
+	.forEach(function (one) {
+		if (req.body[one]) theme[one] = req.body[one];
+	});
+	
+	console.log('current theme:');
+	console.log(theme);
+	*/
+	
+	console.log('ready to save css');
+	console.log(req.body.css);
+	
+	Node.saveCss(nid, req.body.css, function (err) {
 		if (err) return next(err);
-		Node.saveTheme(nid, theme, function (err) {
-			if (err) return next(err);
-			res.redirect('/' + nid);
-		});
-	})
+		res.redirect('/' + nid);
+	});
 	
 }

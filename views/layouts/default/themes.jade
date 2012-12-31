@@ -5,58 +5,322 @@ block design
 		#{design}
 
 block asserts
+	link(rel='stylesheet', href='http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css')
+	link(rel='stylesheet', href='/asserts/stylesheets/jquery.miniColors.css')
+	script(src='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
 	script(src='/asserts/javascripts/theme.color.js')
+	script(src='/asserts/javascripts/jquery.miniColors.js')
+	
 
 block main
-	mixin themeBlocks(themes)
-		ul.themes-list
+	mixin ulThemes(themes)
+		ul.themes
 			each theme in themes
-				mixin themeBlock(theme)
+				mixin liTheme(theme)
 				
-	mixin themeBlock(theme)
-		li.theme-card
+	mixin liTheme(theme)
+		li.theme
 			.mini-paper(style="background-color: #{theme.backgroundColor}", onclick="preview(this, #{theme.id})")
-				.paper-title(style="background-color: #{theme.bgOfTitle};color: #{theme.fgOfTitle}; a color: #{theme.anchorInTitle}")
+				.paper-title(style="background-color: #{theme.bgOfTitle};color: #{theme.fgOfTitle};")
 					| ##{theme.id}
-				.paper-content(style="background-color: #{theme.bgOfContent}; color: #{theme.fgOfContent}; a color: #{theme.anchorInTitle}")
+				.paper-content.paper-catalog(style="background-color: #{theme.bgOfContent}; color: #{theme.fgOfContent};")
 					| #{theme.name}
-				.paper-foot(style="background-color: #{theme.bgOfFoot}; color: #{theme.fgOfFoot}; a color: #{theme.anchorInFoot}")
+				.paper-foot(style="background-color: #{theme.bgOfFoot}; color: #{theme.fgOfFoot};")
 	
-	.themes-container
-		mixin themeBlocks(themes)
-	.saveThemeForm
-		form(id="save", action="/design/#{node.id}/use/theme/", method="post")
-			input(type="hidden", name="_csrf", value="#{token}")
-			input(type="hidden", name="tid")
-			button.btn.btn-block.btn-success.btn-large.disabled(type="submit", disabled="disabled") 保存样式
+	mixin ulpatterns(names)
+		ul.patterns
+			each name in names
+				mixin liPattern(name)
+				
+	mixin liPattern(name)
+		li.pattern(title="#{name}", style="background: url(/asserts/images/patterns/#{name}) repeat", onclick="previewPattern(this, '#{name}')")
+	
+	#design-sidebar.ui-widget-content
+		#accordion
+			h3 主题
+			div
+				mixin ulThemes(themes)
+			h3 背景图
+			div
+				mixin ulpatterns(patterns)
+			h3 自定义
+			div
+				form#designPanel(onsubmit="return false;")
+					h5 页面
+					input.color(type="minicolors",  data-swatch-position="left",  name="backgroundColor")
+					span.label 背景
+					br
+					
+					h5 标题
+					input.color(type="minicolors",  data-swatch-position="left",  name="bgOfTitle")
+					span.label 背景
+					
+					input.color(type="minicolors",  data-swatch-position="left",  name="fgOfTitle")
+					span.label 文字
+					br
+					
+					input.color(type="minicolors",  data-swatch-position="left",  name="anchorInTitle")
+					span.label 链接
+					
+					h5 内容
+					input.color(type="minicolors",  data-swatch-position="left",  name="bgOfContent")
+					span.label 背景
+					br
+					input.color(type="minicolors",  data-swatch-position="left",  name="fgOfContent")
+					span.label 文字
+					br
+					input.color(type="minicolors",  data-swatch-position="left",  name="anchorInContent")
+					span.label 链接
+					
+					h5 目录
+					input.color(type="minicolors",  data-swatch-position="left",  name="bgOfCatalog")
+					span.label 背景
+					br
+					input.color(type="minicolors",  data-swatch-position="left",  name="anchorInCatalog")
+					span.label 链接
+						
+					h5 底栏
+					input.color(type="minicolors",  data-swatch-position="left",  name="bgOfFoot")
+					span.label 背景
+					br
+					input.color(type="minicolors",  data-swatch-position="left",  name="fgOfFoot")
+					span.label 文字
+					br
+					input.color(type="minicolors",  data-swatch-position="left",  name="anchorInFoot")
+					span.label 链接
+					
+					h5 网页背景图
+					span.label.label-info url
+					input.url(type="text", name="backgroundImage")
+					br
+					span.label.label-info 位置
+					select.span1(name="backgroundPosition")
+						option(value="left top") 左上角
+						option(value="left bottom") 左下角
+						option(value="right top") 右上角
+						option(value="right top") 右下角
+						option(value="center top") 顶部居中
+						option(value="center bottom") 底部居中
+						option(value="center center") 正中
+						option(value="center bottom") 底部居中
+					br
+					span.label.label-info 平铺
+					select.span1(name="backgroundRepeat")
+						option(value="repeat")	双向平铺
+						option(value="repeat-x")	横向平铺
+						option(value="repeat-y")	纵向平铺
+						option(value="no-repeat")	不平铺
+					br
+					span.label.label-info 附属
+					select.span1(name="backgroundAttachment")
+						option(value="scroll")	滚动
+						option(value="fixed")	固定
+			
+			
+		.saveDesign
+			form.customize(id="designForm", action="/design/#{node.id}/save/", method="post")
+				input(type="hidden", name="_csrf", value="#{token}")
+				input(type="hidden", name="css")
+				button.btn.btn-block.btn-success.btn-large.disabled(onclick="return submitCss()", disabled="disabled") 保存
 		
 	- var nodeBox = {node: node, isAdmin: isAdmin}
 	include nodeBox
 			
 	
 	script
-		$(document).ready( function () {
-			var bodyheight = $(document).height() - 50;
-			$("themes-container").height(bodyheight);
-			
 		
-			// for the window resize
-			$(window).resize(function() {
-				var bodyheight = $(document).height() - 50;
-				$("themes-container").height(bodyheight);
+		var inputSelectorMaps = {
+			'backgroundColor': ['body', 'background-color'],
+			'backgroundImage': ['body', 'background-image'],
+			'backgroundPosition': ['body', 'background-position'],
+			'backgroundAttachment': ['body', 'background-attachement'],
+			'backgroundRepeat': ['body', 'background-repeat'],
+			'bgOfTitle': ['.paper .paper-title', 'background-color'],
+			'bgOfContent': ['.paper .paper-content', 'background-color'],
+			'bgOfCatalog': ['.paper .paper-catalog', 'background-color'],
+			'bgOfFoot': ['.paper .paper-foot', 'background-color'],
+			'fgOfTitle': ['.paper .paper-title', 'color'],
+			'fgOfContent': ['.paper .paper-content', 'color'],
+			'fgOfFoot': ['.paper .paper-foot', 'color'],
+			'anchorInTitle': ['.paper .paper-title a', 'color'],
+			'anchorInContent': ['.paper .paper-content a', 'color'],
+			'anchorInCatalog': ['.paper .paper-catalog a', 'color'],
+			'anchorInFoot': ['.paper .paper-foot a', 'color']
+		};
+		
+		$(document).ready( function () {
+			var bodyheight = $(document).height();
+			$("design-sidebar").height(bodyheight);
+			
+			$( "#accordion" ).accordion({
+				heightStyle: "fill"
 			});
 			
-			darkCatalog();
+			// for the window resize
+			$(window).resize(function() {
+				var bodyheight = $(document).height();
+				$("design-sidebar").height(bodyheight);
+				$( "#accordion" ).accordion( "refresh" );
+			});
+			
+			
+			// darkCatalog();
+			// darkAnchor();
+			extractCss();
+			inputsOnChange();
+			$.minicolors.init();
 			
 		});
 		
-		function preview (me, id) {
-			$('button[type="submit"]', "#save").removeProp('disabled').removeClass('disabled');
-			$('input[name="tid"]', "#save").val(id);
-			$("body").css('background-color', $(me).css('background-color'));
-			console.log($(".paper-title", me).css('background-color'));
-			console.log($(".paper-content", me).css('background-color'));
-			console.log($(".paper-foot", me).css('background-color'));
-			copyColor(me, ['.paper-title', '.paper-content', '.paper-foot']);
-			darkCatalog();
+		function enableSave () {
+			$('button', ".saveDesign").removeProp('disabled').removeClass('disabled');
 		}
+		
+		function preview (me, id) {
+			$("body").css('background-color', $(me).css('background-color'));
+			copyColor(me, ['.paper-title', '.paper-content', '.paper-catalog', '.paper-foot'], 'background-color');
+			copyColor(me, ['.paper-title', '.paper-content', '.paper-foot', 'a'], 'color');
+			setValueOfTheme(me);
+			darkAnchor();
+			enableSave();
+		}
+		
+		function previewPattern (me, name) {
+			$("body").css('background', $(me).css('background'));
+			$('input[name="backgroundImage"]', "#designPanel").val(extractImageUrl($(me).css('background-image')));
+			$('input[name="backgroundRepeat"]', "#designPanel").val($(me).css('background-repeat'));
+			enableSave();
+		}
+		
+		function copyColor (me, items, property) {
+			var v;
+			for (var i = 0; i< items.length; i++) {
+				if (v = $(items[i], me).css(property)) {
+					// console.log(property + '=' + v);
+					$(items[i], ".paper").css(property, v);
+				} else {
+					// console.log(property + ' is undefined');
+				}
+			}
+		}
+		
+		
+		function setValueOfTheme (me) {
+			var anchorColor = getDynamicAnchorColor();
+			
+			$('input[name="backgroundColor"]', "#designPanel").val(rgb2hex($(me).css('background-color')));
+			$('input[name="bgOfTitle"]', "#designPanel").val(rgb2hex($('.paper-title', me).css('background-color')));
+			$('input[name="bgOfContent"], input[name="bgOfCatalog"]', "#designPanel").val(rgb2hex($('.paper-content', me).css('background-color')));
+			$('input[name="bgOfFoot"]', "#designPanel").val(rgb2hex($('.paper-foot', me).css('background-color')));
+			
+			$('input[name="fgOfTitle"]', "#designPanel").val(rgb2hex($('.paper-title', me).css('color')));
+			$('input[name="fgOfContent"]', "#designPanel").val(rgb2hex($('.paper-content', me).css('color')));
+			$('input[name="fgOfFoot"]', "#designPanel").val(rgb2hex($('.paper-foot', me).css('color')));
+			
+			$('input[name="anchorInTitle"]', "#designPanel").val(anchorColor);
+			$('input[name="anchorInContent"]', "#designPanel").val(anchorColor);
+			$('input[name="anchorInCatalog"]', "#designPanel").val(anchorColor);
+			$('input[name="anchorInFoot"]', "#designPanel").val(anchorColor);
+			
+			$.minicolors.refresh();
+		}
+		
+		function inputsOnChange () {
+			$('input, select', "#designPanel").change(function () {
+				enableSave();
+				var target = inputSelectorMaps[$(this).attr('name')];
+				if (target[1] === 'background-image') {
+					$(target[0]).css(target[1], formatedCssUrl($(this).val()));
+				} else {
+					$(target[0]).css(target[1], $(this).val());
+				}
+				// console.log('$(' + target[0] + ').css("' + target[1] + '", "' + $(this).val() + '")');
+			});
+		}
+		
+		function getDynamicAnchorColor () {
+			return shadeColor(rgb2hex($(".paper-title", ".paper").css('background-color')), -50);
+		}
+		
+		function darkAnchor () {
+			$("a", ".paper").css('color', getDynamicAnchorColor());
+		}
+		
+		function submitCss () {
+			exportCss();
+			$('#designForm').submit();
+		}
+		
+		function exportCss () {
+			var selectors = {
+				'body': ['background-color', 'background-image', 'background-repeat', 'background-position', 'background-attachment'], 
+				'.paper .paper-title': ['background-color', 'color'], 
+				'.paper .paper-content': ['background-color', 'color'], 
+				'.paper .paper-catalog': ['background-color', 'color'], 
+				'.paper .paper-foot': ['background-color', 'color'], 
+				'.paper .paper-title a': ['color'], 
+				'.paper .paper-content a': ['color'], 
+				'.paper .paper-catalog a': ['color'], 
+				'.paper .paper-foot a': ['color']
+			};
+			var cssStr = '';
+			
+			for (var name in selectors) {
+				var properties = selectors[name];
+				var str = '';
+				var value;
+				for (var i = 0; i < properties.length; i++) {
+					if (value = $(name).css(properties[i])) {
+						str += properties[i] + ':' + value + ';';
+					}
+				}
+				cssStr += name+ '{' + str + '}';
+			}
+			// alert(cssStr);
+			$('input[name="css"]', '#designForm').val(cssStr);
+			
+		}
+		
+		function extractCss () {
+			console.log('ready to extract css');
+			for (var input in inputSelectorMaps) {
+				var selector = inputSelectorMaps[input][0];
+				var property = inputSelectorMaps[input][1];
+				var value = $(selector).css(property);
+				console.log(selector + ':' + property + '=' + value);
+				if (!value) continue;
+				
+				switch (property) {
+					case 'background-image':
+						if (value === 'none') continue;
+						value = extractImageUrl(value);
+						break;
+					case 'color':
+						value = rgb2hex(value);
+						break;
+					case 'background-color':
+						if (value === 'rgba(0, 0, 0, 0)' || value === 'transparent') {
+							value = getBackground($(selector).parent());
+						}
+						value = rgb2hex(value);
+						break;
+				}
+				
+				console.log('ready to set ' + input + '=' + value);
+				$('input[name="' + input + '"]', '#designPanel').val(value);
+			}
+		}
+		
+		
+		function extractImageUrl (str) {
+			if (!str) return '';
+			str.replace(/[\'\"]/, '');
+			return str.match(/^url\((.+)\)$/)[1];
+		}
+		
+		function formatedCssUrl (str) {
+			if (!str) return '';
+			return 'url("' + str + '")';
+		}
+		
+		

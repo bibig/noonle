@@ -40,14 +40,18 @@ app.configure(function(){
   //app.use(conditionalLogger);
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use('/asserts', require('stylus').middleware({
+  	src:__dirname + '/public',
+  	compress: (isProduction ? true : false),
+  	force: (isProduction ?  false : true)
+  	}));
+  app.use('/asserts', express.static(path.join(__dirname, 'public')));
   app.use(express.cookieParser(process.env.NOONLE_COOKIE_KEY || 'hello123'));
   // app.use(express.session());
   app.use(express.cookieSession({maxAge: 60 * 60 * 1000, secret: process.env.NOONLE_COOKIE_SESSION_KEY || 'imsecret!'}));
   app.use(require('connect-flash')());
   app.use(express.csrf());
   app.use(app.router);
-  // app.use(require('stylus').middleware(__dirname + '/public'));
-  app.use('/asserts', express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function (){
@@ -128,7 +132,7 @@ app.post('/set/:w_nid/:pid', validate.form, page.set);
 
 // design
 app.get('/design/:w_nid_pages/themes', node.design);
-app.post('/design/:w_nid/use/theme', node.useTheme);
+app.post('/design/:w_nid/save', node.saveDesign);
 
 
 // base design

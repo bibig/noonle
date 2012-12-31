@@ -37,7 +37,7 @@ function read (req, res, next) {
 	res.render('layouts/default/page', { 
 		title: page.title,
 		isAdmin: authorize.isAdmin(req),
-		design: style.make(req),
+		design: style.css(req),
 		page: {
 			id: page.id,
 			node: node,

@@ -1,7 +1,7 @@
 exports.create = create;
 exports.saveContent = saveContent;
 exports.saveSettings = saveSettings;
-exports.saveTheme = saveTheme;
+exports.saveCss = saveCss;
 exports.read = read;
 exports.readonly = readonly;
 exports.readWithPages = readWithPages;
@@ -58,20 +58,8 @@ function saveSettings (_id, data, callback) {
 	);
 }
 
-function saveTheme (id, theme, callback) {
-	Node.update({ id: id }, {
-			backgroundColor: theme.backgroundColor,
-			bgOfTitle: theme.bgOfTitle,
-			fgOfTitle: theme.fgOfTitle,
-			anchorInTitle: theme.anchorInTitle,
-			bgOfContent: theme.bgOfContent,
-			fgOfContent: theme.fgOfContent,
-			anchorInContent: theme.anchorInContent,
-			bgOfFoot: theme.bgOfFoot,
-			fgOfFoot: theme.fgOfFoot,
-			anchorInFoot: theme.anchorInFoot
-		}, callback
-	);
+function saveCss (id, css, callback) {
+	Node.update({ id: id }, {css: css}, callback);
 }
 
 /*
