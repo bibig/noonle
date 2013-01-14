@@ -6,18 +6,21 @@ exports.update = saveEdit;
 exports.set = saveSet;
 exports.design = design;
 exports.saveDesign = saveDesign;
+exports.saveCss = saveCss;
+exports.remove = remove;
+exports.logout = logout;
 // exports.test = test;
 
 var Yi = require('../lib/yi')
   , Node = require('../models/node')
   , Theme = require('../models/theme')
-  , sanitizer = require('sanitizer')
+  // , sanitizer = require('sanitizer')
   , form = require('../lib/form')
   , load = require('../lib/load')
   , style = require('../lib/style')
   , authorize = require('../lib/authorize')
-  , validator = require('../lib/common_validator');
- 
+  , validator = require('../lib/common_validator')
+  , DEFAULT_CSS = 'body{background:#DBE5EB}.paper-title{background:#8c8c8c; color:#fff}.paper-title a{color:#fff}.paper-content {background: #fff; color:#333}.paper-catalog {background: #fff} .paper-catalog a{color:#666}.paper-foot{background-color: #F5F5F5; color: #999}.paper-foot a{color: #999}'
  
 /**
  * create new `Node`.
@@ -27,7 +30,7 @@ var Yi = require('../lib/yi')
  */
 function create (req, res) {
 	//console.log('ready to create new node:' + id);
-	res.redirect('/create/' + Yi.randomString(8));
+	res.redirect('/create/' + Yi.randomString(6));
 }; 
 
 /**
@@ -49,11 +52,11 @@ function read (req, res, next) {
 	var node = load.fetch(req, 'node');
 	// console.log('ready to read node: ' + node.id);
 	// console.log(node);
-	res.render('layouts/default/node', { 
+	res.render('desktop/node', { 
 		title: node.title,
 		isAdmin: authorize.isAdmin(req),
-		design: style.css(req),
-		node: getNodeForRead(node)
+		node: getNodeForRead(node),
+		messages: req.flash('messages')
 	});
 };
 
@@ -70,18 +73,28 @@ function getNodeForRead (node) {
 			parser = require("bbcode");
 			break;
 	}
-	moment.lang('zh-cn');
+	
+	switch (require('i18n').getLocale()) {
+		case 'cn':
+			moment.lang('zh-cn');
+			break;		
+	}
 	
 	return {
 		id: node.id,
 		hit: node.hit,
-		title: sanitizer.escape(node.title),
-		content: parser.parse(sanitizer.sanitize(node.content, function (u) { return u;})),
+		// title: sanitizer.escape(node.title),
+		title: node.title,
+		safeCss: node.safeCss,
+		// content: parser.parse(sanitizer.sanitize(node.content, function (u) { return u;})),
+		content: parser.parse(node.content),
 		// created: moment(node.created).format('LL'),
 		// modified: (node.created < node.modified ? moment(node.modified).calendar() : null),
-		modified: moment(node.modified).format('LLL'),
+		// modified: moment(node.modified).format('LLL'),
+		modified: moment(node.modified).startOf('hour').fromNow(),
 		pages: node._pages,
-		pageCount: node.pageCount
+		pageCount: node.pageCount,
+		editCount: node.editCount
 	};
 }
 
@@ -92,12 +105,22 @@ function getNodeForRead (node) {
 function saveCreate (req, res) {
 	var data = req.body.entity;
 	data['id'] = load.fetch(req, 'node', 'id');
+	data['themeCss'] = DEFAULT_CSS;
+	data['safeCss'] = style.css(DEFAULT_CSS);
+	
 	if (req.validator.pass()) {
 		Node.create(data, function (err, node) {
 			if (err) {
 				console.log('save failed!');
 			} else {
 				// console.log(node);
+				// That was easy!
+				// Here's your new site. Be sure to bookmark it so you can find it again. To change it, just press the edit button at the bottom of the page. Enjoy!
+				req.flash('messages', {
+					type: 'success', 
+					title: __("Here's your new notebook"), 
+					content: __('Be sure to bookmark it so you can find it again. To change it, just press the edit button at the bottom of the page. Enjoy!')
+				});
 				res.redirect('/' + node.id);
 			}
 		});
@@ -110,15 +133,28 @@ function saveCreate (req, res) {
  * save node content after edit.
  */
 function saveEdit (req, res, next) {
-	var id = load.fetch(req, 'node', 'id');
+	var node = load.fetch(req, 'node');
+	var data = req.body.entity;
+	
 	if (req.validator.pass()) {
-		Node.saveContent(id, req.body.entity, function (err) {
-			if (err) {
-				next(err);
-			} else {
-				res.redirect('/' + id);
-			}
-		});
+		if (node.title != data.title || node.content != data.content || node.format != data.format) { // changed
+			data.editCount = node.editCount + 1;
+			data.modified = Date.now();
+		
+			Node.saveContent(node._id, data, function (err) {
+				if (err) {
+					next(err);
+				} else {
+					req.flash('messages', {
+						type: 'success', 
+						title: __("content edit successfully")
+					});
+					res.redirect('/' + node.id);
+				}
+			});
+		} else {
+			res.redirect('/' + node.id);
+		}
 	} else {
 		form.node(req, res);
 	}
@@ -131,17 +167,17 @@ function saveEdit (req, res, next) {
  * coz the author don't need authorize again.
  */
 function saveSet (req, res, next) {
-	var srcId = load.fetch(req, 'node', 'id');
+	var node = load.fetch(req, 'node');
 	var data = req.body.node;
 	var id = data.id;
-	var isIdChanged = (srcId != id);
+	var isIdChanged = (node.id != id);
 	var callback = function (err) {
 		if (err) {
 			next(err);
 		} else {
 			if (isIdChanged) { // the url changed
-				authorize.clearReadCookie(res, srcId);
-				authorize.clearAdminCookie(res, srcId);
+				authorize.clearReadCookie(res, node.id);
+				authorize.clearAdminCookie(res, node.id);
 			}
 
 			if ( data.readPassword != '') {
@@ -156,18 +192,22 @@ function saveSet (req, res, next) {
 				authorize.clearAdminCookie(res, id);
 			}
 			
+			req.flash('messages', {
+				type: 'success', 
+				title: __("settings update successfully")
+			});
 			res.redirect('/' + id);
 		}
 	};
-	var renderFormForInvalidId = function () { 
-		req.validator.addError('id', '此id已经被占用了');
+	
+	function renderFormForInvalidId() {
+		req.validator.addError('id', __('sorry, the id is occupied'));  // '此id已经被占用了'
 		form.node(req, res); 
-	};
+	}
 	
-	var saveCb = function () {
-		Node.saveSettings(data._id, data, callback);
-	};
-	
+	function saveCb () {
+		Node.saveSettings(node._id, data, callback);
+	}
 	
 	if (req.validator.pass()) {
 		if (isIdChanged) {
@@ -180,6 +220,25 @@ function saveSet (req, res, next) {
 	}
 	
 };
+
+
+function saveCss (req, res, next) {
+	var node = load.fetch(req, 'node');
+	var extraCss = req.body.node.css;
+	// console.log(req.body.node);
+	if (req.validator.pass()) {
+		Node.saveExtraCss(node._id, extraCss, style.css(node.themeCss + extraCss), function (err) {
+			if (err) return next(err);
+			req.flash('messages', {
+				type: 'success', 
+				title: __("css update successfully")
+			});
+			res.redirect('/' + node.id);
+		});
+	} else {
+		form.node(req, res);
+	}
+}
 
 function design (req, res, next) {
 	var async = require('async');
@@ -203,9 +262,9 @@ function design (req, res, next) {
 			if (err) {
 				callback(err);
 			} else {
-				console.log('find patterns');
+				// console.log('find patterns');
 				names.splice(0, 1)
-				console.log(names);
+				// console.log(names);
 				callback(null, names);
 			}
 		});
@@ -213,36 +272,46 @@ function design (req, res, next) {
 	async.parallel([getThemes, getPatterns], function (err, datas) {
 		if (err) return next(err);
 		
-		res.render('layouts/default/themes', {
+		res.render('desktop/design', {
 			isAdmin: authorize.isAdmin(req),
-			design: style.css(req),
 			// current: style.json(req),
-			title: 'themes list',
+			title: __('design node'),
 			themes: datas[0],
 			patterns: datas[1],
+			messages: [], // will include _nodeBox.jade, so it is necessary
 			node: getNodeForRead(load.fetch(req, 'node'))
 		});
 	});
 }
 
 function saveDesign (req, res, next) {
-	var nid = load.fetch(req, 'node', 'id');
-	/*var theme = {};
-	['backgroundImage', 'backgroundRepeat', 'backgroundColor', 'bgOfTitle', 'bgOfContent', 'bgOfFoot', 'fgOfTitle', 'fgOfContent', 'fgOfFoot', 'anchorInTitle', 'anchorInContent', 'anchorInFoot']
-	.forEach(function (one) {
-		if (req.body[one]) theme[one] = req.body[one];
-	});
-	
-	console.log('current theme:');
-	console.log(theme);
-	*/
-	
-	console.log('ready to save css');
-	console.log(req.body.css);
-	
-	Node.saveCss(nid, req.body.css, function (err) {
+	var node = load.fetch(req, 'node');
+	var themeCss = req.body.css;
+	Node.saveThemeCss(node._id, themeCss, style.css(themeCss + node.extraCss), function (err) {
 		if (err) return next(err);
-		res.redirect('/' + nid);
+		res.redirect('/' + node.id);
 	});
-	
+}
+
+function remove (req, res, next) {
+	var node = load.fetch(req, 'node');
+	Node.remove(node, function (err) {
+		if (err) return next(err);
+		req.flash('messages', {
+			type: 'success', 
+			title: __("notebook remove successfully")
+		});
+		res.redirect('/');
+	})
+}
+
+function logout (req, res, next) {
+	var nid = load.fetch(req, 'node', 'id');
+	authorize.clearAdminCookie(res, nid);
+	req.flash('messages', {
+		type: 'success', 
+		title: __('logout safely'), 
+		content: __('now, access the admin features need authorize again!')
+	});
+	res.redirect('/' + nid);
 }

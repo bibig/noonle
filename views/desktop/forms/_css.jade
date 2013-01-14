@@ -1,0 +1,37 @@
+form(action="#{_css.action}", method="post")
+	.control-group
+		h4
+			= __i('surport the following selectors')
+		p
+			a.btn.btn-mini.btn-info.btn-selector body 
+			| 
+			a.btn.btn-mini.btn-info.btn-selector .paper
+			| 
+			a.btn.btn-mini.btn-info.btn-selector .paper-title
+			| 
+			a.btn.btn-mini.btn-info.btn-selector .paper-content
+			| 
+			a.btn.btn-mini.btn-info.btn-selector .paper-catalog
+			| 
+			a.btn.btn-mini.btn-info.btn-selector .paper-foot
+			
+		textarea.css(rows="20", name="#{_css.target}[css]")
+			= _css.css
+	.control-group
+		button.btn.btn-large.btn-primary(type='submit')
+			= __i('save')
+			
+	input(type="hidden", name="_csrf", value="#{token}")
+	
+	script
+		$(document).ready( function () {
+			$("a.btn-selector").click(function () {
+				var css = $('textarea.css').val();
+				var sel = $(this).text();
+				if (css === '' || css.replace(sel + '-', '').indexOf(sel) == -1) {
+					css += sel + "{\n}\n";
+					$('textarea.css').val(css);
+				}
+			});
+		});
+	

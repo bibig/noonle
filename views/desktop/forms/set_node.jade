@@ -1,0 +1,83 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-medium	
+		.sheet-title
+			a(href='/' + node.id)
+				= node.title
+		.sheet-container
+			h2
+				= __i('node settings')
+			hr
+			mixin inputText(name, text)
+				label.control-label(for="input_#{name}") #{text}
+				.controls
+					input(type="text", id="input_#{name}", name="node[#{name}]", value="#{node[name] || ''}")
+					span.help-inline #{errors[name]}
+						
+			mixin inputControl(name, text)
+				- if (errors[name])
+					.control-group.error
+						mixin inputText(name, text)
+				- else
+					.control-group
+						mixin inputText(name, text)
+			
+			
+			- var sortByCreated = false
+			- var sortById = false
+			- if (node.sort === 1)
+				sortById = true
+			- else
+				sortByCreated = true
+			
+			- var sortInAsc = false
+			- var sortInDes = false
+			- if (node.sortDirection === 1)
+				sortInDes = true
+			- else
+				sortInAsc = true
+			
+			
+			form.form-horizontal(action='/set/#{nid}', method='post')
+				mixin inputControl('id', siteUrl)
+				hr
+				mixin inputControl('email', __i('claim email'))
+				hr
+				mixin inputControl('readPassword', __i('read password'))
+				mixin inputControl('readPasswordTip', __i('read password tip'))
+				hr
+				mixin inputControl('adminPassword', __i('admin password'))
+				mixin inputControl('adminPasswordTip', __i('admin password tip'))
+				hr
+				
+				.control-group
+					label.control-label
+						= __i('pages sort way')
+					.controls
+						label.radio.inline
+							input(type="radio", name="node[sort]", value='0', checked=sortByCreated) 
+							= __i('publish time')
+						| 
+						label.radio.inline
+							input(type="radio", name="node[sort]", value='1', checked=sortById) 
+							= __i('page id')
+				
+				.control-group
+					label.control-label
+						= __i('sort direction')
+					.controls
+						label.radio.inline
+							input(type="radio", name="node[sortDirection]", value='0', checked=sortInAsc) 
+							= __i('ascend')
+						| 
+						label.radio.inline
+							input(type="radio", name="node[sortDirection]", value='1', checked=sortInDes) 
+							=  __i('descend')
+				
+				.control-group
+					.controls
+						button.btn.btn-primary(type='submit')
+							= __i('save')
+				input(type="hidden", name="_csrf", value="#{token}")
+				

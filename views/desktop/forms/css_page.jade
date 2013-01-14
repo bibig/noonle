@@ -1,0 +1,14 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-medium
+		.sheet-title
+			a(href='/' + nid) 
+				= node.title
+			|  >  
+			a(href='/' + nid + '/' + page.id) 
+				= page.title
+		.sheet-container
+			include _alertErrors
+			- var _css = { action: '/css/' + nid + '/' + page.id, target: 'page', css: page.extraCss}
+			include _css

@@ -1,0 +1,21 @@
+include _alertErrors
+
+form(action='#{_authorize.action}', method='post')
+	.input-prepend.input-append
+		span.add-on
+			i.icon-lock
+		input.span2(type="password", name="password")
+		button.btn(type="submit")
+			= __i('submit')
+	label.checkbox
+		input(type="checkbox", name="remember") 
+		= __i('remember me')
+	input(type="hidden", name="from", value="#{from}")
+	input(type="hidden", name="_csrf", value="#{token}")
+	
+- if (tip)
+	strong
+		= __i('tip')
+		| :
+	small 
+		= tip

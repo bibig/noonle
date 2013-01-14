@@ -5,7 +5,7 @@ exports.readonly = readonly;
 exports.hit = hit;
 exports.remove = remove;
 exports.exists = exists;
-
+exports.saveExtraCss = saveExtraCss;
 
 var Yi = require('../lib/yi')
   , db = require('./db')
@@ -27,6 +27,8 @@ function create (node, data, callback) {
 			callback(err);	
 		} else {
 			node.pageCount++;
+			node.editCount++;
+			node.modified = Date.now();
 			node._pages.push(page._id);
 			node.save(function (err) {
 				if (err) {
@@ -37,7 +39,7 @@ function create (node, data, callback) {
 			});
 		}
 	});
-};
+}
 
 function saveContent (_id, data, callback) {
 	Page.update({ _id: _id }, {
@@ -45,7 +47,8 @@ function saveContent (_id, data, callback) {
 			content: data.content,
 			size: data.content.length,
 			format: data.format,
-			modified:Date.now()
+			editCount: data.editCount,
+			modified: data.modified
 		}, callback
 	);
 }
@@ -115,27 +118,21 @@ function hit (page) {
 	Page.update({ _id: page._id }, { hit: page.hit + 1 });
 }
 
-function remove (page, callback) {
-
-	Node.findOne({'_id' : page._node },  function (err, node) {
+function remove (node,  page, callback) {
+	node._pages.splice(node._pages.indexOf(page._id), 1);
+	node.pageCount--;
+	node.editCount++;
+	node.modified = Date.now();
+	node.save(function(err) {
 		if (err) {
 			callback(err);
 		} else {
-			node._pages.splice(node._pages.indexOf(page._id), 1);
-			node.pageCount--;
-			node.save(function(err) {
-				if (err) {
-					callback(err);
-				} else {
-					page.remove(function(err) {
-						callback(err);
-					});
-				}
+			page.remove(function(err) {
+				callback(err);
 			});
 		}
 	});
-
-};
+}
 
 function exists (_node, id, callback) {
 	Page.findOne({_node: _node, id: id}, function (err, page) {
@@ -148,3 +145,8 @@ function exists (_node, id, callback) {
 		}
 	});
 }
+
+function saveExtraCss (_id, extraCss, safeCss, callback) {
+	Page.update({ _id: _id }, {extraCss: extraCss, safeCss: safeCss}, callback);
+}
+

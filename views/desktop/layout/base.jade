@@ -1,0 +1,12 @@
+doctype 5
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/asserts/bootstrap/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/asserts/stylesheets/style.css')
+		script(src='http://code.jquery.com/jquery-1.8.3.js')
+		block asserts
+		block design
+	body
+		block content
+		script(src='/asserts/bootstrap/js/bootstrap.min.js')

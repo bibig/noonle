@@ -1,5 +1,0 @@
-extends ../layouts/default/narrow
-	
-block main
-	- var entity = { action: '/edit/' + node.id, hiddens: [{name: 'id', value: node.id}], title: node.title, content: node.content, format: node.format }
-	include entity

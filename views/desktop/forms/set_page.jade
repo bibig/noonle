@@ -1,0 +1,34 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-medium
+		.sheet-title
+			a(href='/' + nid) 
+				= node.title
+			|  >  
+			a(href='/' + nid + '/' + page.id) 
+				= page.title
+		.sheet-container
+			h2
+				= __i('page settings')
+			hr
+			mixin inputText(name, text)
+				label.control-label(for="input_#{name}") #{text}
+				.controls
+					input(type="text", id="input_#{name}", name="page[#{name}]", value="#{page[name]}")
+					span.help-inline #{errors[name]}
+			mixin inputControl(name, text)
+				- if (errors[name])
+					.control-group.error
+						mixin inputText(name, text)
+				- else
+					.control-group
+						mixin inputText(name, text)
+			form.form-horizontal(action='/set/#{nid}/#{pid}', method='post')
+				mixin inputControl('id', nodeUrl)
+				.control-group
+					.controls
+						button.btn.btn-primary(type='submit')
+							= __i('save')
+				input(type="hidden", name="_csrf", value="#{token}")
+					

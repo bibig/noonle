@@ -1,0 +1,37 @@
+- if (messages.length > 0)
+	mixin messageBox(title, content)
+		button.close(type="button", data-dismiss="alert") &times;
+		h4.alert-heading #{title}
+		- if (content)
+			p
+				!= content
+
+	mixin defaultMessage(title, content)
+		.alert.alert-block.fade.in
+			mixin messageBox(title, content)
+
+	mixin errorMessage(title, content)
+		.alert.alert-block.alert-error.fade.in
+			mixin messageBox(title, content)
+
+	mixin infoMessage(title, content)
+		.alert.alert-block.alert-info.fade.in
+			mixin messageBox(title, content)
+
+	mixin successMessage(title, content)
+		.alert.alert-block.alert-success.fade.in
+			mixin messageBox(title, content)
+	
+	mixin showMessage(message)
+		case message.type
+			when 'error'
+				mixin errorMessage(message.title, message.content)
+			when 'info'
+				mixin infoMessage(message.title, message.content)
+			when 'success'
+				mixin successMessage(message.title, message.content)
+			default
+				mixin defaultMessage(message.title, message.content)
+
+	each message in messages
+		mixin showMessage(message)

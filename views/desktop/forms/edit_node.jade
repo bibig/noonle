@@ -1,0 +1,13 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-medium
+		.sheet-title
+			a(href='/' + node.id)
+				= node.title
+		.sheet-container
+			h2
+				= __i('edit node')
+			hr
+			- var _entity = { action: '/edit/' + node.id, deleteAction: '/remove/' + node.id, hiddens: [{name: 'id', value: node.id}], title: node.title, content: node.content, format: node.format }
+			include _entity

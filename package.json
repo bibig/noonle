@@ -20,10 +20,10 @@
     "moment": "*",
     "sanitizer": "0.0.15",
     "validator": "*",
-    "express-validator": "*",
     "cookie": "*",
     "cookie-signature": "*",
     "connect-flash": "*",
+    "i18n": "*",
     "color": "*",
     "async": "*",
     "mongoose": "*"

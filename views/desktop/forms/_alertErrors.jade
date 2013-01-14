@@ -1,0 +1,11 @@
+mixin errorItem(item)
+	li= item
+
+mixin errorBlock(errors)
+	.alert.alert-error
+		ul
+			each error in errors
+				mixin errorItem(error)
+	
+- if (errors)
+	mixin errorBlock(errors)

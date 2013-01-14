@@ -1,0 +1,10 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-medium
+		.sheet-container
+			h2
+				= __i('create node')
+			hr
+			- var _entity = { action: '/create/' + node.id, title: node.title, content: node.content, format: '0', errors: errors }
+			include _entity

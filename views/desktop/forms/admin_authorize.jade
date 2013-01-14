@@ -1,0 +1,14 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-mini
+		.sheet-title
+			small > 
+			a(href='/' + id)
+				= id
+		.sheet-container
+			h3
+				= __i('admin authorize')
+			hr
+			- var _authorize = {action: '/auth/admin/' + id}
+			include _authorize

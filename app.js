@@ -4,17 +4,15 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  // , logger = express.logger()
+  , i18n = require("i18n")
   , node = require('./routes/node')
   , page = require('./routes/page')
-  , theme = require('./routes/theme')
-  , message = require('./routes/message')
   , load = require('./lib/load')
   , counter = require('./lib/counter')
   , form = require('./lib/form')
   , authorize = require('./lib/authorize')
   , validate = require('./lib/common_validator')
+  , sanitize = require('./lib/sanitize')
   , http = require('http')
   , path = require('path')
   , isProduction = process.env.NODE_ENV === 'production'
@@ -22,6 +20,7 @@ var express = require('express')
 
 
 /*
+var logger = express.logger()
 function appLogger (req, res, next) {
   if (!(/\.(png|jpg|gif|jpeg)$/i).test(req.path)) {
     logger(req, res, next);
@@ -30,6 +29,18 @@ function appLogger (req, res, next) {
   }
 };
 */
+
+i18n.configure({
+	// setup some locales - other locales default to en silently
+	locales:['en', 'cn'],
+	// where to register __() and __n() to, might be "global" if you know what you are doing
+	register: global
+});
+
+app.locals({
+	__i: i18n.__,
+	__n: i18n.__n
+});
 
 app.configure(function(){
   app.set('port', isProduction ? 8080 : 3000);
@@ -54,6 +65,8 @@ app.configure(function(){
   app.use(app.router);
 });
 
+
+
 app.configure('development', function (){
   app.use(express.errorHandler());
 });
@@ -62,7 +75,7 @@ app.configure('production', function () {
   app.use(function(err, req, res, next){
     console.error(err);
     res.status(501);
-    res.send('很抱歉，出错了');
+    res.send(__('sorry, something wrong!'));
   });
 });
 
@@ -88,6 +101,12 @@ app.param('w_nid_pages',  load.root); // check if the nid is under control of ro
 app.param('w_nid_pages',  load.nodeWithPages);
 app.param('w_nid_pages',  authorize.checkAdmin);
 
+app.param('w_nid_detailed_pages',  load.root); 
+app.param('w_nid_detailed_pages',  load.nodeWithDetailedPages);
+app.param('w_nid_detailed_pages',  authorize.checkAdmin);
+
+
+
 app.param('pid', load.page);
 app.param('_pid', validate.ifNodeIsFrozen);
 app.param('_pid', load.newPage);
@@ -106,41 +125,53 @@ app.post('/auth/root', [load.root, validate.form], authorize.submitForRoot);
 
 app.get('/new', node.create);
 app.get('/create/:_nid', form.node);
-app.post('/create/:_nid', validate.form, node.save);
+app.post('/create/:_nid', [sanitize.safe, validate.form], node.save);
+
+// remove node
+app.post('/remove/:w_nid_detailed_pages', node.remove);
 
 // edit node
 app.get('/edit/:w_nid', form.node);
-app.post('/edit/:w_nid', validate.form, node.update);
+app.post('/edit/:w_nid', [sanitize.safe, validate.form], node.update);
 
 // set node
 app.get('/set/:w_nid', form.node);
 app.post('/set/:w_nid', validate.form, node.set);
 
+// css node
+app.get('/css/:w_nid', form.node);
+app.post('/css/:w_nid', validate.form, node.saveCss);
+
+// design
+app.get('/design/:w_nid_pages', node.design);
+app.post('/design/:w_nid', node.saveDesign);
+
+// logout
+app.get('/logout/:w_nid', node.logout);
+
+
 // create new page
 app.get('/new/:w_nid', page.create);
 app.get('/create/:w_nid/:_pid', form.page);
-app.post('/create/:w_nid/:_pid', validate.form, page.save);
+app.post('/create/:w_nid/:_pid', [sanitize.safe, validate.form], page.save);
 
 
 // edit page
 app.get('/edit/:w_nid/:pid', form.page);
-app.post('/edit/:w_nid/:pid', validate.form, page.update);
+app.post('/edit/:w_nid/:pid', [sanitize.safe, validate.form], page.update);
+
+// remove page
+app.post('/remove/:w_nid/:pid', page.remove);
 
 // set page
 app.get('/set/:w_nid/:pid', form.page);
 app.post('/set/:w_nid/:pid', validate.form, page.set);
 
-// design
-app.get('/design/:w_nid_pages/themes', node.design);
-app.post('/design/:w_nid/save', node.saveDesign);
-
-
-// base design
-app.get('/themes/init', load.root, theme.init);
-app.get('/themes', load.root, theme.list);
+// css page
+app.get('/css/:w_nid/:pid', form.page);
+app.post('/css/:w_nid/:pid', validate.form, page.saveCss);
 
 app.get('/:r_nid_pages', counter.nodeHit, node.read);
-
 app.get('/:r_nid/:pid', counter.pageHit, page.read);
 
 // 404 page

@@ -1,0 +1,13 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-medium
+		.sheet-title
+			a(href='/' + nid) 
+				= node.title
+		.sheet-container
+			h2
+				= __i('create page')
+			hr
+			- var _entity = { action: '/create/' + nid + '/' + page.id, title: page.title, content: page.content, format: '0', errors: errors }
+			include _entity

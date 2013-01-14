@@ -1,0 +1,16 @@
+extends ../layout/system
+	
+block main
+	.sheet.sheet-medium
+		.sheet-title
+			a(href='/' + nid) 
+				= node.title
+			|  >  
+			a(href='/' + nid + '/' + page.id) 
+				= page.title
+		.sheet-container
+			h2
+				= __i('edit page')
+			hr
+			- var _entity = { action: '/edit/' + nid + '/' + page.id, deleteAction: '/remove/' + nid + '/' + page.id, hiddens: [{name: '_id', value: page._id} , {name: 'id', value: page.id}], title: page.title, content: page.content, format: page.format }
+			include _entity

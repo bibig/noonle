@@ -1,0 +1,44 @@
+include _alertErrors
+
+form(action='#{_entity.action}', method='post', id='entityForm')
+	.row-fluid
+		input.span12(type='text', name='entity[title]', placeholder=__i('name'), title=__i('name'), value=_entity.title)
+		// span.help-block Example block-level help text here.
+		textarea.input-block-level(name='entity[content]', rows='20', placeholder=__i('content'), title=__i('content'))
+			!= _entity.content
+		
+	- var normalRadio
+	- var mdRadio
+	- if (_entity.format == 0)
+		normalRadio = true
+		mdRadio = false
+	- else
+		normalRadio = false
+		mdRadio = true
+		
+	.row-fluid
+		.span4
+			label.radio
+				input(type="radio", name="entity[format]", value='0', checked=normalRadio) 
+				= __i('html')
+			label.radio
+				input(type="radio", name="entity[format]", value='1', checked=mdRadio) 
+				= __i('markdown')
+		.span3
+			- if (_entity.deleteAction)
+				button.btn.btn-block.btn-danger(type="button", onclick="deleteEntity('#{_entity.deleteAction}')") 
+					= __i('delete')
+				script
+					function deleteEntity(action) {
+						if (confirm("#{__i('Are you sure? it cannot recover!')}") === true) {
+							$('#entityForm').attr("action", action).submit();
+						}
+					}
+		.span5
+			button.btn.btn-block.btn-primary(type='submit')
+				= __i('publish')
+	
+	input(type='hidden', name='_csrf', value="#{token}")
+	- if ( _entity.hiddens )
+		each hidden in _entity.hiddens
+			input(type='hidden', name='entity[#{hidden.name}]', value="#{hidden.value}")
