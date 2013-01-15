@@ -2,7 +2,7 @@
 var Theme = require('../models/Theme')
   , fs = require('fs')
   , color = require('color')
-  , localJson = './tmp/wufooThemes.json';
+  , localJson = './tools/wufooThemes.json';
   
   
 function jsonToDb () {
