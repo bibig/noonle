@@ -1,5 +1,5 @@
 // node ./tools/importThemes.js
-var Theme = require('../models/Theme')
+var Theme = require('../models/theme')
   , fs = require('fs')
   , color = require('color')
   , localJson = './tools/wufooThemes.json';
