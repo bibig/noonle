@@ -58,7 +58,7 @@ function read (req, res, next) {
 		node: getNodeForRead(node),
 		messages: req.flash('messages')
 	});
-};
+}
 
 function getNodeForRead (node) {
 	var moment = require('moment');
@@ -75,7 +75,7 @@ function getNodeForRead (node) {
 	}
 	
 	switch (require('i18n').getLocale()) {
-		case 'cn':
+		case 'zh':
 			moment.lang('zh-cn');
 			break;		
 	}
@@ -118,7 +118,7 @@ function saveCreate (req, res) {
 				// Here's your new site. Be sure to bookmark it so you can find it again. To change it, just press the edit button at the bottom of the page. Enjoy!
 				req.flash('messages', {
 					type: 'success', 
-					title: __("Here's your new notebook"), 
+					title: __("Here's your new node"), 
 					content: __('Be sure to bookmark it so you can find it again. To change it, just press the edit button at the bottom of the page. Enjoy!')
 				});
 				res.redirect('/' + node.id);
@@ -127,7 +127,7 @@ function saveCreate (req, res) {
 	} else {
 		form.node(req, res);
 	}
-};
+}
 
 /**
  * save node content after edit.
@@ -158,7 +158,7 @@ function saveEdit (req, res, next) {
 	} else {
 		form.node(req, res);
 	}
-};
+}
 
 /**
  * save the settings for node.
@@ -219,7 +219,7 @@ function saveSet (req, res, next) {
 		form.node(req, res);
 	}
 	
-};
+}
 
 
 function saveCss (req, res, next) {
@@ -299,7 +299,7 @@ function remove (req, res, next) {
 		if (err) return next(err);
 		req.flash('messages', {
 			type: 'success', 
-			title: __("notebook remove successfully")
+			title: __("node remove successfully")
 		});
 		res.redirect('/');
 	})
@@ -310,8 +310,7 @@ function logout (req, res, next) {
 	authorize.clearAdminCookie(res, nid);
 	req.flash('messages', {
 		type: 'success', 
-		title: __('logout safely'), 
-		content: __('now, access the admin features need authorize again!')
+		title: __('logout safely')
 	});
 	res.redirect('/' + nid);
 }

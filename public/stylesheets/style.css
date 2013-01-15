@@ -237,10 +237,9 @@ textarea.css {
   margin-top: 28px;
 }
 .foot {
-  text-align: center;
-  margin: 10px;
-}
-.head {
-  line-height: 20px;
-  height: 20px;
+  text-align: right;
+  position: fixed;
+  width: 95%;
+  bottom: 10px;
+  font-size: 10px;
 }

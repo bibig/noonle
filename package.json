@@ -23,6 +23,7 @@
     "cookie": "*",
     "cookie-signature": "*",
     "connect-flash": "*",
+    "connect-i18n": "*",
     "i18n": "*",
     "color": "*",
     "async": "*",

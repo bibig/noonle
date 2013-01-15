@@ -5,6 +5,7 @@
 
 var express = require('express')
   , i18n = require("i18n")
+  , conni18n = require('connect-i18n')
   , node = require('./routes/node')
   , page = require('./routes/page')
   , load = require('./lib/load')
@@ -13,6 +14,7 @@ var express = require('express')
   , authorize = require('./lib/authorize')
   , validate = require('./lib/common_validator')
   , sanitize = require('./lib/sanitize')
+  , lang = require('./lib/lang')
   , http = require('http')
   , path = require('path')
   , isProduction = process.env.NODE_ENV === 'production'
@@ -32,7 +34,7 @@ function appLogger (req, res, next) {
 
 i18n.configure({
 	// setup some locales - other locales default to en silently
-	locales:['en', 'cn'],
+	locales:['en', 'zh'],
 	// where to register __() and __n() to, might be "global" if you know what you are doing
 	register: global
 });
@@ -57,6 +59,10 @@ app.configure(function(){
   	force: (isProduction ?  false : true)
   	}));
   app.use('/asserts', express.static(path.join(__dirname, 'public')));
+  
+  // i18n
+  app.use(conni18n({default_locale: 'en-us'}));
+  
   app.use(express.cookieParser(process.env.NOONLE_COOKIE_KEY || 'hello123'));
   // app.use(express.session());
   app.use(express.cookieSession({maxAge: 60 * 60 * 1000, secret: process.env.NOONLE_COOKIE_SESSION_KEY || 'imsecret!'}));
@@ -64,8 +70,6 @@ app.configure(function(){
   app.use(express.csrf());
   app.use(app.router);
 });
-
-
 
 app.configure('development', function (){
   app.use(express.errorHandler());
@@ -111,6 +115,7 @@ app.param('pid', load.page);
 app.param('_pid', validate.ifNodeIsFrozen);
 app.param('_pid', load.newPage);
 
+app.all('*', lang.autoset);
 
 // site default node
 app.get('/', node.index);

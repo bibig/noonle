@@ -36,7 +36,7 @@ function read (req, res, next) {
 	}
 	
 	switch (require('i18n').getLocale()) {
-		case 'cn':
+		case 'zh':
 			moment.lang('zh-cn');
 			break;		
 	}
@@ -82,8 +82,7 @@ function saveCreate (req, res) {
 			} else {
 				req.flash('messages', {
 					type: 'success', 
-					title: __("Here's your new page"), 
-					content: __('To change it, just press the edit button at the bottom of the page. Enjoy!')
+					title: __("Here's your new page")
 				});
 				res.redirect('/' + node.id + '/' + page.id);
 			}
