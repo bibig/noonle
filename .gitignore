@@ -8,7 +8,7 @@ coverage.html
 *.out
 *.pid
 *.gz
-
+public/stylesheets/style.css
 pids
 logs
 results
