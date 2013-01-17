@@ -83,5 +83,6 @@
 	"hi": "hi~",
 	"read authorize": "read authorize",
 	"new notebook": "new notebook",
-	"Powered": "Powered by Ytji"
+	"Powered": "Powered by Ytji",
+	"remove current background": "remove current background"
 }

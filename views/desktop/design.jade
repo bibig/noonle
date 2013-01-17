@@ -32,6 +32,11 @@ block main
 		ul.patterns
 			each name in names
 				mixin liPattern(name)
+			li.pattern
+				button.btn.btn-danger.btn-block(onclick="removePattern()")
+					i.icon-remove.icon-white
+					| 
+					= __i('remove current background')
 					
 	mixin liPattern(name)
 		li.pattern(title="#{name}", style="background: url(/asserts/images/patterns/#{name}) repeat", onclick="previewPattern(this, '#{name}')")
@@ -160,6 +165,10 @@ block main
 			$("body").css('background-repeat', $(me).css('background-repeat'));
 			$("body").css('background-attachment', $(me).css('background-attachment'));
 			enableSave();
+		}
+		
+		function removePattern () {
+			$("body").css('background-image', 'none');
 		}
 		
 		function copyColor (me, items, property) {

@@ -74,11 +74,11 @@
 	"page remove successfully": "页面已删除",
 	"node remove successfully": "节点已删除",
 	"authorized successfully": "认证通过",
-	"hi~": "嗨~",
 	"new node": "新节点",
 	"read authorize": "阅读权限认证",
 	"new notebook": "new notebook",
 	"add node css": "add node css",
 	"Powered": "盐糖记驱动",
-	"hi": "hi"
+	"hi": "嗨~",
+	"remove current background": "移除当前背景"
 }
