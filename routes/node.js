@@ -20,7 +20,7 @@ var Yi = require('../lib/yi')
   , style = require('../lib/style')
   , authorize = require('../lib/authorize')
   , validator = require('../lib/common_validator')
-  , DEFAULT_CSS = 'body{background:#DBE5EB}.paper-title{background:#8c8c8c; color:#fff}.paper-title a{color:#fff}.paper-content {background: #fff; color:#333}.paper-catalog {background: #fff} .paper-catalog a{color:#666}.paper-foot{background-color: #F5F5F5; color: #999}.paper-foot a{color: #999}'
+  , DEFAULT_CSS = 'body{background:#DBE5EB}.node-title{font-size:32px}.page-title{font-size:18px}.paper-title{background:#8c8c8c; color:#fff}.paper-title a{color:#fff}.paper-content {font-size:14px;background: #fff; color:#333}.paper-catalog {background: #fff} .paper-catalog a{font-size:16px;color:#666}.paper-foot{background-color: #F5F5F5; color: #999}.paper-foot a{color: #999}'
  
 /**
  * create new `Node`.
@@ -108,7 +108,6 @@ function saveCreate (req, res) {
 	data['id'] = load.fetch(req, 'node', 'id');
 	data['themeCss'] = DEFAULT_CSS;
 	data['safeCss'] = style.css(DEFAULT_CSS);
-	
 	if (req.validator.pass()) {
 		Node.create(data, function (err, node) {
 			if (err) {
@@ -279,6 +278,7 @@ function design (req, res, next) {
 function saveDesign (req, res, next) {
 	var node = load.fetch(req, 'node');
 	var themeCss = req.body.css;
+	
 	Node.saveThemeCss(node._id, themeCss, style.css(themeCss + node.extraCss), function (err) {
 		if (err) return next(err);
 		res.redirect('/' + node.id);

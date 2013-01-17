@@ -11,7 +11,8 @@ block main
 		include _flash
 		.paper-title.page-title
 			a(href="/#{page.node.id}") #{page.node.title} 
-			| > 
+			i.icon-chevron-right.icon-white
+			| 
 			a(href="") #{page.title}
 		.paper-content
 			!= page.content

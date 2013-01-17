@@ -45,6 +45,10 @@ textarea.css {
 .paper {
   margin: 30px auto 0;
   width: 780px;
+  line-height: 1.5;
+}
+.paper li {
+  line-height: 1.5;
 }
 .paper .dropup ul {
   opacity: 1 !important;
@@ -54,28 +58,23 @@ textarea.css {
 }
 .paper .paper-title {
   padding: 10px 20px;
-  line-height: 1.4;
 }
 .paper .node-title a {
-  font-size: 32px;
   font-weight: bold;
 }
 .paper .node-title a:hover {
   text-decoration: none;
 }
 .paper .page-title a {
-  font-size: 16px;
   font-weight: bold;
 }
 .paper .paper-content {
   padding: 30px;
-  line-height: 1.5;
 }
 .paper .paper-catalog {
   padding: 20px;
 }
 .paper .paper-catalog li {
-  font-size: 16px;
   list-style: circle;
 }
 #design-sidebar {
@@ -94,16 +93,20 @@ textarea.css {
   font-size: 12px;
   width: 130px;
 }
-#design-sidebar form#designPanel select {
-  font-size: 12px;
-  height: 16px;
-  margin: 2px;
-}
 #design-sidebar form#designPanel input.url {
   font-size: 12px;
   margin: 2px;
   height: 16px;
   width: 80px;
+}
+#design-sidebar form#fontPanel {
+  margin-left: -10px;
+}
+#design-sidebar form#fontPanel input {
+  font-size: 12px;
+  margin: 2px;
+  height: 16px;
+  width: 100px;
 }
 #design-sidebar .saveDesign {
   margin-top: 1em;
@@ -245,4 +248,32 @@ textarea.css {
   bottom: 10px;
   left: 20px;
   font-size: 10px;
+}
+ul.fontselector {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: 0;
+  font-size: 14px;
+  float: left;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  z-index: 10;
+  position: absolute;
+}
+ul.fontselector li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+ul.fontselector a {
+  display: block;
+  padding: 3px;
+  color: #000;
+  text-decoration: none;
+}
+ul.fontselector a:hover {
+  background: #ddd;
+  cursor: pointer;
 }

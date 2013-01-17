@@ -10,6 +10,7 @@ block asserts
 	script(src='http://code.jquery.com/ui/1.9.2/jquery-ui.js')
 	script(src='/asserts/javascripts/theme.color.js')
 	script(src='/asserts/javascripts/jquery.miniColors.js')
+	script(src='/asserts/javascripts/jquery.fontSelector.js')
 	
 
 block main
@@ -43,34 +44,28 @@ block main
 	
 	#design-sidebar.ui-widget-content
 		#accordion
-			h3
-				= __i('template')
+			h3 #{__i('template')}
 			div
 				mixin ulTemplates(templates)
-			h3
-				= __i('background')
+			h3 #{__i('background')}
 			div
 				mixin ulpatterns(patterns)
-			h3 
-				= __i('palette')
+			h3 #{__i('palette')}
 			div
 				form#designPanel(onsubmit="return false;")
-					h5
-						= __i('web')
+					h5 #{__i('web')}
 					input.color(type="minicolors",  data-swatch-position="left",  name="backgroundColor")
 					span.label
 						= __i('bg')
 					br
-					h5
-						= __i('title')
+					h5 #{__i('title')}
 					input.color(type="minicolors",  data-swatch-position="left",  name="bgOfTitle")
 					span.label
 						= __i('bg')
 					input.color(type="minicolors",  data-swatch-position="left",  name="fgOfTitle")
 					span.label
 						= __i('fg')
-					h5
-						= __('content')
+					h5 #{__('content')}
 					input.color(type="minicolors",  data-swatch-position="left",  name="bgOfContent")
 					span.label
 						= __i('bg')
@@ -84,8 +79,7 @@ block main
 						= __i('link')
 					
 					- if (node.pageCount)
-						h5
-							= __i('catalog')
+						h5 #{__i('catalog')}
 						input.color(type="minicolors",  data-swatch-position="left",  name="bgOfCatalog")
 						span.label
 							= __i('bg')
@@ -93,8 +87,33 @@ block main
 						input.color(type="minicolors",  data-swatch-position="left",  name="anchorInCatalog")
 						span.label
 							= __i('link')
+			h3 #{__i('font')}
+			div
+				mixin fontSlide(name)
+					.row-fluid
+						.span3
+							span.label #{__i('font')}
+						.span9
+							input.fontSelector(name="#{name}")
+					span
+						span.label
+							= __i('font size')
+						| 
+						span.label.label-info
+							span(id="#{name}-size-label")
+					div(id="#{name}-size-slide", style="width: 140px; margin: 10px;")
 					
-			
+				form#fontPanel(onsubmit="return false;")
+					h5 #{__i('title')}
+					mixin fontSlide('fontOfTitle')
+					hr
+					h5 #{__i('content')}
+					mixin fontSlide('fontOfContent')
+					- if (node.pageCount)
+						hr
+						h5 #{__i('catalog')}
+						mixin fontSlide('fontOfCatalog')
+
 		.saveDesign
 			form.customize(id="designForm", action="/design/#{node.id}", method="post")
 				input(type="hidden", name="_csrf", value="#{token}")
@@ -143,7 +162,72 @@ block main
 			extractCss();
 			inputsOnChange();
 			$.minicolors.init();
+		});
+		
+		$(function() {
+			$('input[name="fontOfTitle"]').val($(".node-title a").css('font-family'));
+			$('input[name="fontOfContent"]').val($(".paper-content").css('font-family'));
+			$('input[name="fontOfCatalog"]').val($(".paper-catalog").css('font-family'));
 			
+			$('input[name="fontOfTitle"]').change(function () {
+				enableSave();
+				$(".node-title a").css('font-family', $('input[name="fontOfTitle"]').val());
+			});
+			$('input[name="fontOfContent"]').change(function () {
+				enableSave();
+				$(".paper-content").css('font-family', $('input[name="fontOfContent"]').val());
+			});
+			$('input[name="fontOfCatalog"]').change(function () {
+				enableSave();
+				$(".paper-catalog a").css('font-family', $('input[name="fontOfCatalog"]').val());
+			});
+			
+			$('input.fontSelector').fontSelector();
+			
+			$("#fontOfTitle-size-label").text($(".node-title a").css('font-size').replace('px', ''));
+			$("#fontOfTitle-size-slide").slider({
+				orientation: "horizontal",
+				value: $("#fontOfTitle-size-label").text(),
+				min: 12,
+				max: 72,
+				range: "min",
+				animate: true,
+				slide: function( event, ui ) {
+					enableSave();
+					$(".node-title a").css('font-size', ui.value);
+					$("#fontOfTitle-size-label").text(ui.value);
+				}
+			});
+			
+			$("#fontOfContent-size-label").text($(".paper-content").css('font-size').replace('px', ''));
+			$("#fontOfContent-size-slide").slider({
+				value: $("#fontOfContent-size-label").text(),
+				min: 12,
+				max: 28,
+				orientation: "horizontal",
+				range: "min",
+				animate: true,
+				slide: function( event, ui ) {
+					enableSave();
+					$(".paper-content, .paper-content a").css('font-size', ui.value);
+					$("#fontOfContent-size-label").text(ui.value);
+				}
+			});
+			
+			$("#fontOfCatalog-size-label").text($(".paper-catalog a").css('font-size').replace('px', ''));
+			$("#fontOfCatalog-size-slide").slider({
+				value: $("#fontOfCatalog-size-label").text(),
+				min: 12,
+				max: 30,
+				orientation: "horizontal",
+				range: "min",
+				animate: true,
+				slide: function( event, ui ) {
+					enableSave();
+					$(".paper-catalog a").css('font-size', ui.value);
+					$("#fontOfCatalog-size-label").text(ui.value);
+				}
+			});
 		});
 		
 		function enableSave () {
@@ -225,11 +309,12 @@ block main
 			var selectors = {
 				'body': ['background-color', 'background-image', 'background-repeat', 'background-position', 'background-attachment'], 
 				'.paper .paper-title': ['background-color'], 
-				'.paper .paper-content': ['background-color', 'color'], 
+				'.paper .paper-content': ['background-color', 'color', 'font-family', 'font-size'], 
 				'.paper .paper-catalog': ['background-color', 'color'],
 				'.paper .paper-title a': ['color'], 
 				'.paper .paper-content a': ['color'], 
-				'.paper .paper-catalog a': ['color']
+				'.paper .paper-catalog a': ['color', 'font-family', 'font-size'],
+				'.node-title a': ['font-family', 'font-size']
 			};
 			var cssStr = '';
 			
@@ -246,6 +331,7 @@ block main
 			}
 			
 			$('input[name="css"]', '#designForm').val(cssStr);
+			console.log('cssStr:' + cssStr);
 			
 		}
 		

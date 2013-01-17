@@ -80,5 +80,7 @@
 	"add node css": "add node css",
 	"Powered": "盐糖记驱动",
 	"hi": "嗨~",
-	"remove current background": "移除当前背景"
+	"remove current background": "移除当前背景",
+	"font": "字体",
+	"font size": "大小"
 }
