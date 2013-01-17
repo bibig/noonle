@@ -57,7 +57,7 @@ function parseToJson () {
 		var html = data.toString().replace(/[\n]+/g, '');
 		var re = /<a href="http:\/\/wufoo.com\/gallery\/designs\/[\d]+\/\" onclick="return false;" title="([a-zA-Z0-9 ]+)"(.*?)<\/li>/gi;
 		var match, i=0;
-		var themes = {};
+		var themes = [];
 		
 		// w: background
 		// l: bgOfTitle
@@ -66,18 +66,18 @@ function parseToJson () {
 		// h: bgOfCatalog
 		
 		while(match = re.exec(html)) {
-			var title = match[1]
+			var name = match[1]
 			  , subHtml = match[2].replace(/background-color|background/gi, '')
-			  , colors = [] // [backgroundColor, bgOfTitle, bgOfFoot, bgOfContent, bgOfCatalog]
+			  , template = [name] // [name, backgroundColor, bgOfTitle, bgOfFoot, bgOfContent, bgOfCatalog]
 			  , subRe, subMatch; 
 			  
 			// console.log(i + ') ' + title);  
 			subRe = /var class="([wlifh])" style=":(#[0-9a-z]{6})/gi;
 			while(subMatch = subRe.exec(subHtml)) {
-				colors.push(subMatch[2]);
+				template.push(subMatch[2]);
 			}
 			// console.log(colors);
-			themes[title] = colors;
+			themes.push(template);
 			i++;
 		}
 		

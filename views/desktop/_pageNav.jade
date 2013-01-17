@@ -1,0 +1,12 @@
+#nav
+	include _nav
+	- if (isAdmin)
+		a(href="/edit/#{page.node.id}/#{page.id}", title=__i('edit'))
+			i.icon-pencil.icon-white
+		a(href="/set/#{page.node.id}", title=__i('settings'))
+			i.icon-wrench.icon-white
+		a(href="/css/#{page.node.id}/#{page.id}", title=__i('css'))
+			i.icon-asterisk.icon-white
+	- else
+			a(href="/auth/admin/#{page.node.id}", title=__i('admin'))
+				i.icon-user.icon-white

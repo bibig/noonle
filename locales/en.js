@@ -80,7 +80,7 @@
 	"node remove successfully": "node remove successfully",
 	"authorized successfully": "authorized successfully",
 	"new node": "new node",
-	"hi~": "hi~",
+	"hi": "hi~",
 	"read authorize": "read authorize",
 	"new notebook": "new notebook",
 	"Powered": "Powered by Ytji"

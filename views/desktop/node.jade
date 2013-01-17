@@ -4,11 +4,9 @@ block design
 	style(type="text/css")
 		#{node.safeCss}
 
-block asserts
-	script(src='/asserts/javascripts/theme.color.js')
-
 block main
-	include _nav
-	- var _nodeBox = {node: node, isAdmin: isAdmin}
+	include _nodeNav
+	- var _nodeBox = {node: node}
 	include _nodeBox
+	include _nodeFoot
 	

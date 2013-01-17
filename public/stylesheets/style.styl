@@ -34,18 +34,21 @@ textarea.css
 	display: block
 	width: 300px
 	height: 30px
-	top: 5px
+	top: 10px
 	right: 15px
 	text-align: right
+	.site
+		margin-right: 1.5em
 	a
 		background: #333
 		color: #fff
-		padding: 2px 6px
-		margin: 0 3px
+		padding: 1px 3px
+		margin: 0 1px
 		text-decoration: none;
 	a:hover
 		background: #999
 		color: #222
+
 
 .paper
 	margin: 30px auto 0
@@ -62,32 +65,26 @@ textarea.css
 		line-height: 1.4
 	
 	.node-title
-		font-size: 32px
-		font-weight: bold
+		a
+			font-size: 32px
+			font-weight: bold
+		a:hover
+			text-decoration: none
 
 	.page-title
-		font-size: 16px
-		font-weight: bold
+		a
+			font-size: 16px
+			font-weight: bold
 	
 	.paper-content
 		padding: 30px
+		line-height: 1.5
 	
 	.paper-catalog
 		padding: 20px
 		li
+			font-size: 16px
 			list-style: circle
-	
-	.paper-foot
-		position: relative
-		height: 30px
-		line-height: 30px
-		padding: 0 20px
-		.date
-			font-size: 10px
-		.options
-			position: absolute
-			top: 3px
-			right: 10px
 
 
 #design-sidebar
@@ -143,11 +140,11 @@ textarea.css
 		
 		
 	
-	ul.themes 
+	ul.templates 
 		margin-left: -8px
 		width: 150px
 
-		li.theme 
+		li.template 
 			display: block
 			list-style: none
 			width: 140px
@@ -246,9 +243,18 @@ textarea.css
 	p + h4 
 		margin-top: 28px
 
-.foot
+#foot
 	text-align:right
 	position: fixed
-	width: 95%
+	width: 300px
 	bottom: 10px
+	right: 20px
+	font-size: 10px
+
+#node-foot
+	text-align:left
+	position: fixed
+	width: 300px
+	bottom: 10px
+	left: 20px
 	font-size: 10px

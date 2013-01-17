@@ -1,0 +1,19 @@
+#nav
+	include _nav
+	- if (isAdmin)
+		a(href="/new/#{node.id}", title=__i('new page'))
+			i.icon-plus-sign.icon-white
+		a(href="/edit/#{node.id}", title=__i('edit'))
+			i.icon-pencil.icon-white
+		a(href="/set/#{node.id}", title=__i('settings'))
+			i.icon-wrench.icon-white
+		a(href="/design/#{node.id}", title=__i('design'))
+			i.icon-leaf.icon-white
+		a(href="/css/#{node.id}", title=__i('css'))
+			i.icon-asterisk.icon-white
+		- if (node.hasAdminPassword)
+			a(href="/logout/#{node.id}", title=__i('logout'))
+				i.icon-off.icon-white
+	- else
+			a(href="/auth/admin/#{node.id}", title=__i('admin'))
+				i.icon-user.icon-white

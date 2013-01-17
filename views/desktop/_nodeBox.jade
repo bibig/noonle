@@ -1,10 +1,8 @@
 .paper
 	include _flash
-	- var node = _nodeBox.node;
-	- var isAdmin = _nodeBox.isAdmin;
+	- var node = _nodeBox.node
 	.paper-title.node-title 
-		= node.title
-		a.hide(href="#") #
+		a(href='/' + node.id) #{node.title}
 	.paper-content
 		!= node.content
 		a.hide(href="#") #
@@ -15,41 +13,3 @@
 	- else
 		.paper-catalog.hide
 			a(href="#") #
-	.paper-foot
-		small(title=__i('edit times')) v#{node.editCount}
-		|, 
-		span.date(title=__i('last published at'))
-			= node.modified
-		span.options
-			- if (isAdmin)
-				.btn-group.dropup
-					button.btn.btn-mini.dropdown-toggle(data-toggle="dropdown")
-						= __i('admin')
-						|  
-						span.caret
-					ul.dropdown-menu
-						li
-							a(href="/new/#{node.id}")
-								= __i('new page')
-						li.divider
-						li
-							a(href="/edit/#{node.id}")
-								= __i('edit')
-						li 
-							a(href="/set/#{node.id}")
-								= __i('settings')
-						li.divider
-						li
-							a(href="/design/#{node.id}")
-								= __i('design')
-						li
-							a(href="/css/#{node.id}")
-								= __i('css')
-						- if (undefined !== node.adminPassword && '' !== node.adminPassword)
-							li.divider
-							li
-								a(href="/logout/#{node.id}")
-									= __i('logout')
-			- else
-				a(href="/auth/admin/#{node.id}")
-					= __i('admin')

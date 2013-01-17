@@ -7,38 +7,11 @@ block design
 		
 block main
 	.paper
-		include _nav
+		include _pageNav
 		include _flash
 		.paper-title.page-title
 			a(href="/#{page.node.id}") #{page.node.title} 
 			| > 
-			= page.title
+			a(href="") #{page.title}
 		.paper-content
 			!= page.content
-			
-		.paper-foot
-			small(title=__i('edit times')) v#{page.editCount}
-			|, 
-			span.date(title=__i('last published at'))
-				= page.modified
-			span.options
-				- if (isAdmin)
-					.btn-group.dropup
-						button.btn.btn-mini.dropdown-toggle(data-toggle="dropdown")
-							= __i('admin')
-							|  
-							span.caret
-						ul.dropdown-menu
-							li
-								a(href="/edit/#{page.node.id}/#{page.id}")
-									= __i('edit')
-							li 
-								a(href="/set/#{page.node.id}/#{page.id}")
-									= __i('settings')
-							li.divider
-							li
-								a(href="/css/#{page.node.id}/#{page.id}")
-									= __i('css')
-				- else
-					a(href="/auth/admin/#{page.node.id}")
-						= __i('admin')

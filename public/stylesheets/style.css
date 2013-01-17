@@ -24,15 +24,18 @@ textarea.css {
   display: block;
   width: 300px;
   height: 30px;
-  top: 5px;
+  top: 10px;
   right: 15px;
   text-align: right;
+}
+#nav .site {
+  margin-right: 1.5em;
 }
 #nav a {
   background: #333;
   color: #fff;
-  padding: 2px 6px;
-  margin: 0 3px;
+  padding: 1px 3px;
+  margin: 0 1px;
   text-decoration: none;
 }
 #nav a:hover {
@@ -53,36 +56,27 @@ textarea.css {
   padding: 10px 20px;
   line-height: 1.4;
 }
-.paper .node-title {
+.paper .node-title a {
   font-size: 32px;
   font-weight: bold;
 }
-.paper .page-title {
+.paper .node-title a:hover {
+  text-decoration: none;
+}
+.paper .page-title a {
   font-size: 16px;
   font-weight: bold;
 }
 .paper .paper-content {
   padding: 30px;
+  line-height: 1.5;
 }
 .paper .paper-catalog {
   padding: 20px;
 }
 .paper .paper-catalog li {
+  font-size: 16px;
   list-style: circle;
-}
-.paper .paper-foot {
-  position: relative;
-  height: 30px;
-  line-height: 30px;
-  padding: 0 20px;
-}
-.paper .paper-foot .date {
-  font-size: 10px;
-}
-.paper .paper-foot .options {
-  position: absolute;
-  top: 3px;
-  right: 10px;
 }
 #design-sidebar {
   padding: 10px;
@@ -136,11 +130,11 @@ textarea.css {
 #design-sidebar form.customize input.color {
   margin: 1px;
 }
-#design-sidebar ul.themes {
+#design-sidebar ul.templates {
   margin-left: -8px;
   width: 150px;
 }
-#design-sidebar ul.themes li.theme {
+#design-sidebar ul.templates li.template {
   display: block;
   list-style: none;
   width: 140px;
@@ -148,21 +142,21 @@ textarea.css {
   margin: 15px auto;
   cursor: pointer;
 }
-#design-sidebar ul.themes li.theme .mini-paper {
+#design-sidebar ul.templates li.template .mini-paper {
   padding: 20px;
 }
-#design-sidebar ul.themes li.theme .mini-paper .mini-paper-title {
+#design-sidebar ul.templates li.template .mini-paper .mini-paper-title {
   padding: 2px 4px;
   font-size: 10px;
   font-weight: bold;
   height: 20px;
 }
-#design-sidebar ul.themes li.theme .mini-paper .mini-paper-content {
+#design-sidebar ul.templates li.template .mini-paper .mini-paper-content {
   padding: 5px;
   font-size: 8px;
   height: 60px;
 }
-#design-sidebar ul.themes li.theme .mini-paper .mini-paper-foot {
+#design-sidebar ul.templates li.template .mini-paper .mini-paper-foot {
   height: 10px;
 }
 #design-sidebar ul.patterns {
@@ -236,10 +230,19 @@ textarea.css {
 .marketing p + h4 {
   margin-top: 28px;
 }
-.foot {
+#foot {
   text-align: right;
   position: fixed;
-  width: 95%;
+  width: 300px;
   bottom: 10px;
+  right: 20px;
+  font-size: 10px;
+}
+#node-foot {
+  text-align: left;
+  position: fixed;
+  width: 300px;
+  bottom: 10px;
+  left: 20px;
   font-size: 10px;
 }

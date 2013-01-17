@@ -79,5 +79,6 @@
 	"read authorize": "阅读权限认证",
 	"new notebook": "new notebook",
 	"add node css": "add node css",
-	"Powered": "盐糖记驱动"
+	"Powered": "盐糖记驱动",
+	"hi": "hi"
 }
