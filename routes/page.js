@@ -65,9 +65,7 @@ function read (req, res, next) {
 }
 
 function create (req, res) {
-	// res.redirect('/' + load.fetch(req, 'node', 'id') + '/' + Yi.randomString(4));
-	var id = load.fetch(req, 'node', 'pageCount') + 1;
-	res.redirect('/' + load.fetch(req, 'node', 'id') + '/' + id);
+	res.redirect('/' + load.fetch(req, 'node', 'id') + '/' +  Yi.randomString(4));
 }
 
 function saveCreate (req, res) {

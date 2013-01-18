@@ -83,7 +83,5 @@
 	"remove current background": "移除当前背景",
 	"font": "字体",
 	"font size": "大小",
-	"css set": "css set",
-	"set css": "set css",
-	"customize css": "customize css"
+	"customize css": "css自定义"
 }
