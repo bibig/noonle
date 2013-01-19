@@ -1,0 +1,44 @@
+extends ./layout/full
+
+block main
+	table.table.table-condensed
+		tr
+			th title
+			th email
+			th pages
+			th created
+			th modified
+		each node in list
+			tr
+				td
+					- if (node.readPassword.length > 0)
+						i.icon-lock
+						| 
+					- if (node.adminPassword.length > 0)
+						i.icon-user
+						| 
+					- else if (node.readPassword.length === 0)
+						i.icon-globe
+						| 
+					a(href="/#{node.id}") #{node.title}
+				td #{node.email}
+				td 
+					- if (node.pageCount > 0)
+						span.badge #{node.pageCount}
+				td 
+					= moment(node.created).startOf('hour').fromNow()
+				td 
+					= moment(node.modified).startOf('hour').fromNow()
+		tr
+			td(colspan="5")
+				- if (page > 1)
+					- var prevPage = page - 1
+					a(href="/nodes/" + prevPage)  
+						i.icon-chevron-left
+					|    
+				- var nextPage = page + 1
+				|  page #{page} 
+				- if (list.length > 1)
+					|   
+					a(href="/nodes/" + nextPage)
+						i.icon-chevron-right

@@ -10,6 +10,7 @@ exports.hit = hit;
 exports.remove = remove;
 exports.exists = exists;
 exports.count = count;
+exports.all = all;
 
 var Yi = require('../lib/yi')
   , db = require('./db')
@@ -190,4 +191,16 @@ function exists (id, callback) {
 
 function count (callback) {
 	Node.count({}, callback);
+}
+
+function all (callback, page, limit) {
+	var query = Node.find();
+	limit = limit || 50;
+	
+	query
+		.select('id title pageCount adminPassword readPassword email size created modified')
+		.sort('-modified')
+		.skip((page-1) * limit)
+		.limit(limit)
+		.exec(callback);
 }

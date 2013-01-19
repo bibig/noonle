@@ -84,7 +84,7 @@ app.configure('production', function () {
 });
 
 app.param('_nid',  load.newNode);
-app.param('_nid',  load.root); // check if the nid is under control of root
+app.param('_nid',  load.isRoot); // check if the nid is under control of root
 app.param('_nid',  authorize.checkAdmin);
 
 app.param('r_nid_pages',  load.nodeWithPages);
@@ -95,17 +95,17 @@ app.param('r_nid',  authorize.checkRead);
 
 app.param('a_r_nid',  load.node);
 app.param('a_w_nid',  load.nodeOrNewNode);
-app.param('a_w_nid',  load.root); // check if the nid is under control of root
+app.param('a_w_nid',  load.isRoot); // check if the nid is under control of root
 
-app.param('w_nid',  load.root); // check if the nid is under control of root
+app.param('w_nid',  load.isRoot); // check if the nid is under control of root
 app.param('w_nid',  load.node);
 app.param('w_nid',  authorize.checkAdmin);
 
-app.param('w_nid_pages',  load.root); // check if the nid is under control of root
+app.param('w_nid_pages',  load.isRoot); // check if the nid is under control of root
 app.param('w_nid_pages',  load.nodeWithPages);
 app.param('w_nid_pages',  authorize.checkAdmin);
 
-app.param('w_nid_detailed_pages',  load.root); 
+app.param('w_nid_detailed_pages',  load.isRoot); 
 app.param('w_nid_detailed_pages',  load.nodeWithDetailedPages);
 app.param('w_nid_detailed_pages',  authorize.checkAdmin);
 
@@ -128,7 +128,9 @@ app.all('*', lang.autoset);
 
 // site default node
 app.get('/', node.index);
-app.get('/status', node.status);
+app.get('/status', [load.root, authorize.checkRoot], node.status);
+app.get('/nodes', [load.root, authorize.checkRoot], node.all);
+app.get('/nodes/:page', [load.root, authorize.checkRoot], node.all);
 
 app.post('/auth/read/:a_r_nid', validate.form, authorize.submitForRead);
 app.post('/auth/admin/:a_w_nid', validate.form, authorize.submitForAdmin);

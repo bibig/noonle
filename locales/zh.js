@@ -87,5 +87,8 @@
 	"version": "版本",
 	"site status": "网站状态",
 	"node count": "节点数",
-	"page count": "页面数"
+	"page count": "页面数",
+	"nodes list": "nodes list",
+	"invalid email": "invalid email",
+	"root authorize": "root authorize"
 }

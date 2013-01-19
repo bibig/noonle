@@ -10,6 +10,7 @@ exports.saveCss = saveCss;
 exports.remove = remove;
 exports.logout = logout;
 exports.status = status;
+exports.all = all;
 // exports.test = test;
 
 var Yi = require('../lib/yi')
@@ -333,4 +334,19 @@ function status (req, res, next) {
 			count: results
 		});
 	});
+}
+
+function all (req, res, next) {
+	var page = req.params['page'] || 1;
+	page = parseInt(page, 10);
+	function list (err, nodes) {
+		if (err) return next(err);
+		res.render('desktop/nodeList', {
+			title: __('nodes list'),
+			list: nodes,
+			moment: require('moment'),
+			page: page
+		});
+	}
+	Node.all(list, page);
 }
