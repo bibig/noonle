@@ -117,8 +117,8 @@ app.param('_pid', load.newPage);
 
 
 app.get('/*', function(req, res, next) {
-	if (req.subdomains.count === 1 && req.subdomains[0] === 'www') {
-		res.redirect(req.protocol + '//' + req.host.replace(/^www\./, '') + req.path, 301);
+	if (req.subdomains.length === 1 && req.subdomains[0] === 'www') {
+		res.redirect(req.protocol + '://' + req.host.replace(/^www\./, '') + req.path);
 	} else { 
 		next();
 	}
