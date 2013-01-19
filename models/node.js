@@ -9,6 +9,7 @@ exports.readWithPages = readWithPages;
 exports.hit = hit;
 exports.remove = remove;
 exports.exists = exists;
+exports.count = count;
 
 var Yi = require('../lib/yi')
   , db = require('./db')
@@ -187,22 +188,6 @@ function exists (id, callback) {
 	});
 }
 
-/*
-// population is query item by item
-exports.pages = function (node, callback) {
-	Page
-	.find({_node: node._id})
-	.select('id title')
-	.sort(node.sort == 0 ? { id: 1 } : { title: 1}),
-	.limit(node.pageCount)
-	.exec(function (err, pages) {
-		if (err) {
-			callback(err);
-		} else if (!pages) {
-			db.page404(callback);
-		} else {
-			callback(null, pages);
-		}
-	});
+function count (callback) {
+	Node.count({}, callback);
 }
-*/

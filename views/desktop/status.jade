@@ -1,0 +1,15 @@
+extends ./layout/full
+
+block main
+	table.table.table-bordered
+		tr
+			th(width="20%")
+				h2 #{__i('node count')}
+			td
+				h1 #{count.node}
+		tr
+			th 
+				h2 #{__i('page count')}
+			td
+				h1 #{count.page}
+	

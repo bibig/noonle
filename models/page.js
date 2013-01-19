@@ -6,6 +6,7 @@ exports.hit = hit;
 exports.remove = remove;
 exports.exists = exists;
 exports.saveExtraCss = saveExtraCss;
+exports.count = count;
 
 var Yi = require('../lib/yi')
   , db = require('./db')
@@ -150,3 +151,6 @@ function saveExtraCss (_id, extraCss, safeCss, callback) {
 	Page.update({ _id: _id }, {extraCss: extraCss, safeCss: safeCss}, callback);
 }
 
+function count (callback) {
+	Page.count({}, callback);
+}

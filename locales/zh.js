@@ -84,5 +84,8 @@
 	"font": "字体",
 	"font size": "大小",
 	"customize css": "css自定义",
-	"version": "version"
+	"version": "版本",
+	"site status": "网站状态",
+	"node count": "节点数",
+	"page count": "页面数"
 }

@@ -9,6 +9,7 @@ exports.saveDesign = saveDesign;
 exports.saveCss = saveCss;
 exports.remove = remove;
 exports.logout = logout;
+exports.status = status;
 // exports.test = test;
 
 var Yi = require('../lib/yi')
@@ -305,4 +306,31 @@ function logout (req, res, next) {
 		title: __('logout safely')
 	});
 	res.redirect('/' + nid);
+}
+
+function status (req, res, next) {
+	var Page = require('../models/page');
+	var async = require('async');
+	
+	async.parallel({
+		node: function(callback){
+			Node.count(function (err, count) {
+				if (err) return next(err);
+				callback(null, count);
+			});
+		},
+		
+		page: function(callback){
+			Page.count(function (err, count) {
+				if (err) return next(err);
+				callback(null, count);
+			});
+		},
+	},
+	function(err, results) {
+		res.render('desktop/status', {
+			title: __('site status'),
+			count: results
+		});
+	});
 }

@@ -128,6 +128,7 @@ app.all('*', lang.autoset);
 
 // site default node
 app.get('/', node.index);
+app.get('/status', node.status);
 
 app.post('/auth/read/:a_r_nid', validate.form, authorize.submitForRead);
 app.post('/auth/admin/:a_w_nid', validate.form, authorize.submitForAdmin);
