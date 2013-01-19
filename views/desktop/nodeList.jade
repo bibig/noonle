@@ -1,8 +1,9 @@
 extends ./layout/full
 
 block main
-	table.table.table-condensed
+	table.table.table-condensed.table-striped
 		tr
+			th id
 			th title
 			th email
 			th pages
@@ -11,15 +12,23 @@ block main
 		each node in list
 			tr
 				td
-					- if (node.readPassword.length > 0)
-						i.icon-lock
+					- if (belongToRoot(node.id))
+						i.icon-bookmark
 						| 
-					- if (node.adminPassword.length > 0)
-						i.icon-user
-						| 
-					- else if (node.readPassword.length === 0)
-						i.icon-globe
-						| 
+					- else
+						- if (node.readPassword.length > 0)
+							i.icon-lock
+							| 
+						- if (node.adminPassword.length > 0)
+							i.icon-user
+							| 
+						- else if (node.readPassword.length === 0)
+							i.icon-globe
+							| 
+					small
+						| /
+						= node.id
+				td
 					a(href="/#{node.id}") #{node.title}
 				td #{node.email}
 				td 

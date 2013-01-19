@@ -337,6 +337,7 @@ function status (req, res, next) {
 }
 
 function all (req, res, next) {
+	var load = require('../lib/load');
 	var page = req.params['page'] || 1;
 	page = parseInt(page, 10);
 	function list (err, nodes) {
@@ -345,7 +346,8 @@ function all (req, res, next) {
 			title: __('nodes list'),
 			list: nodes,
 			moment: require('moment'),
-			page: page
+			page: page,
+			belongToRoot: load.belongToRoot
 		});
 	}
 	Node.all(list, page);
