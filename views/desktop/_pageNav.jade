@@ -1,6 +1,8 @@
 #nav
 	include _nav
 	- if (isAdmin)
+		a(href='/' + page.node.id, title=page.node.title)
+			i.icon-home.icon-white
 		a(href="/edit/#{page.node.id}/#{page.id}", title=__i('edit'))
 			i.icon-pencil.icon-white
 		a(href="/set/#{page.node.id}", title=__i('settings'))

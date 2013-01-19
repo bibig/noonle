@@ -8,5 +8,6 @@ block main
 	include _nodeNav
 	- var _nodeBox = {node: node}
 	include _nodeBox
-	include _nodeFoot
+	- var _versionFoot = {editCount: node.editCount, modified: node.modified}
+	include _versionFoot
 	

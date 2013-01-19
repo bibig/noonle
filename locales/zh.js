@@ -83,5 +83,6 @@
 	"remove current background": "移除当前背景",
 	"font": "字体",
 	"font size": "大小",
-	"customize css": "css自定义"
+	"customize css": "css自定义",
+	"version": "version"
 }

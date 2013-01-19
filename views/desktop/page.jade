@@ -16,3 +16,5 @@ block main
 			a(href="") #{page.title}
 		.paper-content
 			!= page.content
+	- var _versionFoot = {editCount: page.editCount, modified: page.modified}
+	include _versionFoot
