@@ -1,27 +1,6 @@
 module.exports = function () {
 	var mongoose = require('mongoose')
 	  , conn = mongoose.createConnection('mongodb://localhost/jishi')
-	  , ThemeSchema = mongoose.Schema({
-	  		id: Number,
-	  		name: String,
-	  		backgroundColor: { type: String, default: '' }, 
-			backgroundImage: { type: String, default: '' }, 
-			backgroundRepeat: { type: String, default: '' }, 
-			backgroundPosition: { type: String, default: '' }, 
-			backgroundAttachment: { type: String, default: '' },  // scroll, fixed
-			
-			bgOfTitle: { type: String, default: 'green' },
-			fgOfTitle: { type: String, default: '#fff' },
-			anchorInTitle: { type: String, default: '#fff' },
-			
-			bgOfContent: { type: String, default: '#fff' },
-			fgOfContent: { type: String, default: '' },
-			anchorInContent: { type: String, default: '' },
-			
-			bgOfFoot: { type: String, default: '' },
-			fgOfFoot: { type: String, default: '' },
-			anchorInFoot: { type: String, default: '' }
-	  })
 	  , WastebinSchema = mongoose.Schema({
 	  		id: String,
 	  		email: { type: String, default: ''},
@@ -73,7 +52,6 @@ module.exports = function () {
 		conn: conn,
 		Node: conn.model('Node', NodeSchema),
 		Page: conn.model('Page', PageSchema),
-		Theme: conn.model('Theme', ThemeSchema),
 		Wastebin: conn.model('Wastebin', WastebinSchema),
 		e404: function (callback) {
 			var err = new Error('no data found');

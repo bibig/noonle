@@ -148,10 +148,13 @@ function readWithPages (id, callback, isDetailed) {
 	});
 }
 
-
-
 function hit (node) {
-	Node.update({ _id: node._id }, { hit: node.hit + 1 });
+	// console.log('ready to hit node:' + node);
+	Node.update({ _id: node._id }, { hit: (node.hit + 1) }, function (err, numberAffected, raw) {
+		if (err) return console.error(err);
+		// console.log('The number of updated documents was %d', numberAffected);
+		// console.log('The raw response from Mongo was ', raw);
+	});
 }
 
 function remove (node, callback) {
@@ -165,10 +168,10 @@ function remove (node, callback) {
 	console.log(waste);
 	waste.save(function (err) {
 		if (err) {
-			console.log('move node into waste failed!');
+			// console.log('move node into waste failed!');
 			callback(err);
 		} else {
-			console.log('nove node into waste successfully!');
+			// console.log('nove node into waste successfully!');
 			Page.where('_node', node._id).remove();
 			Node.where('_id', node._id).remove();
 			callback();
@@ -198,7 +201,7 @@ function all (callback, page, limit) {
 	limit = limit || 50;
 	
 	query
-		.select('id title pageCount adminPassword readPassword email size created modified')
+		.select('id title pageCount adminPassword readPassword email size hit created modified')
 		.sort('-modified')
 		.skip((page-1) * limit)
 		.limit(limit)

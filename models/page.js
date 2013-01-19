@@ -116,7 +116,12 @@ function readonly (_node, id, callback) {
 }
 
 function hit (page) {
-	Page.update({ _id: page._id }, { hit: page.hit + 1 });
+	// console.log('ready to hit page:' + page.hit);
+	Page.update({ _id: page._id }, { hit: page.hit + 1 }, function (err, numberAffected, raw) {
+		if (err) return console.error(err);
+		// console.log('The number of updated documents was %d', numberAffected);
+		// console.log('The raw response from Mongo was ', raw);
+	});
 }
 
 function remove (node,  page, callback) {
