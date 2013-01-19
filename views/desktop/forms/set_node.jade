@@ -27,8 +27,12 @@ block main
 			
 			
 			- var sortByCreated = false
+			- var sortByTitle = false
 			- var sortById = false
+			
 			- if (node.sort === 1)
+				sortByTitle = true
+			- else if (node.sort === 2)
 				sortById = true
 			- else
 				sortByCreated = true
@@ -62,7 +66,11 @@ block main
 							= __i('publish time')
 						| 
 						label.radio.inline
-							input(type="radio", name="node[sort]", value='1', checked=sortById) 
+							input(type="radio", name="node[sort]", value='1', checked=sortByTitle) 
+							= __i('page title')
+						| 
+						label.radio.inline
+							input(type="radio", name="node[sort]", value='2', checked=sortById) 
 							= __i('page id')
 				
 				.control-group

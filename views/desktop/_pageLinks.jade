@@ -4,6 +4,7 @@ mixin pageLink(page, current)
 			#{page.title}
 		- else
 			a(href="/#{node.id}/#{page.id}") #{page.title}
+		// = page.created
 
 mixin pageLinkList(pages)
 	ul

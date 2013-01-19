@@ -42,6 +42,7 @@
 	"descend": "降序",
 	"publish time": "发布时间",
 	"page id": "页面id",
+	"page title": "页面标题",
 	"id": "id",
 	"please input %s": "请输入%s",
 	"max length is %s": "最大长度是%s",
