@@ -27,6 +27,7 @@
     "i18n": "*",
     "color": "*",
     "async": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "nodemailer": "*"
   }
 }

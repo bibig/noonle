@@ -5,12 +5,12 @@ block main
 		.sheet-title
 			i.icon-home.icon-white
 			| 
-			a(href='/' + nid) 
+			a(href='/' + node.id) 
 				= node.title
 			|  >  
-			a(href='/' + nid + '/' + page.id) 
+			a(href='/' + node.id + '/' + page.id) 
 				= page.title
 		.sheet-container
 			include _alertErrors
-			- var _css = { action: '/css/' + nid + '/' + page.id, target: 'page', css: page.extraCss}
+			- var _css = { action: '/css/' + node.id + '/' + page.id, target: 'page', css: form.extraCss}
 			include _css

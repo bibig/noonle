@@ -79,7 +79,7 @@ app.configure('production', function () {
   app.use(function(err, req, res, next){
     console.error(err);
     res.status(501);
-    res.send(__('sorry, something wrong!'));
+    res.send(__('sorry, something was wrong!'));
   });
 });
 

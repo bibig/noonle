@@ -14,7 +14,7 @@ block main
 			mixin inputText(name, text)
 				label.control-label(for="input_#{name}") #{text}
 				.controls
-					input(type="text", id="input_#{name}", name="node[#{name}]", value="#{node[name] || ''}")
+					input(type="text", id="input_#{name}", name="node[#{name}]", value="#{form[name] || ''}")
 					span.help-inline #{errors[name]}
 						
 			mixin inputControl(name, text)
@@ -45,7 +45,7 @@ block main
 				sortInAsc = true
 			
 			
-			form.form-horizontal(action='/set/#{nid}', method='post')
+			form.form-horizontal(action='/set/#{node.id}', method='post')
 				mixin inputControl('id', siteUrl)
 				hr
 				mixin inputControl('email', __i('claim email'))
@@ -90,4 +90,3 @@ block main
 						button.btn.btn-primary(type='submit')
 							= __i('save')
 				input(type="hidden", name="_csrf", value="#{token}")
-				

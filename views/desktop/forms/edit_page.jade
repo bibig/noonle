@@ -5,14 +5,14 @@ block main
 		.sheet-title
 			i.icon-home.icon-white
 			| 
-			a(href='/' + nid) 
+			a(href='/' + node.id) 
 				= node.title
 			|  >  
-			a(href='/' + nid + '/' + page.id) 
+			a(href='/' + node.id + '/' + page.id) 
 				= page.title
 		.sheet-container
 			h2
 				= __i('edit page')
 			hr
-			- var _entity = { action: '/edit/' + nid + '/' + page.id, deleteAction: '/remove/' + nid + '/' + page.id, hiddens: [{name: '_id', value: page._id} , {name: 'id', value: page.id}], title: page.title, content: page.content, format: page.format }
+			- var _entity = { action: '/edit/' + node.id + '/' + page.id, deleteAction: '/remove/' + node.id + '/' + page.id, hiddens: [{name: '_id', value: page._id} , {name: 'id', value: page.id}], title: form.title, content: form.content, format: form.format }
 			include _entity

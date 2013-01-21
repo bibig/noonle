@@ -23,7 +23,8 @@ var Yi = require('../lib/yi')
   , authorize = require('../lib/authorize')
   , validator = require('../lib/common_validator')
   , DEFAULT_CSS = 'body{background:#DBE5EB}.node-title{font-size:32px}.page-title{font-size:18px}.paper-title{background:#8c8c8c; color:#fff}.paper-title a{color:#fff}.paper-content {font-size:14px;background: #fff; color:#333}.paper-catalog {background: #fff} .paper-catalog a{font-size:16px;color:#666}.paper-foot{background-color: #F5F5F5; color: #999}.paper-foot a{color: #999}'
- 
+  , MAX_PAGE_COUNT = 500;
+   
 /**
  * create new `Node`.
  * will generate a random string as the new node id, then redirect to the node read url.
@@ -252,6 +253,7 @@ function design (req, res, next) {
 		} else {
 			// console.log(names);
 			// names.splice(0, 1);
+			names = names || [];
 			names.forEach(function (name) {
 				var ext = name.split('.')[1];
 				if ( ext === 'png' || ext === 'jpg') {

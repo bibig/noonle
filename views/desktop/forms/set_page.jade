@@ -5,10 +5,10 @@ block main
 		.sheet-title
 			i.icon-home.icon-white
 			| 
-			a(href='/' + nid) 
+			a(href='/' + node.id) 
 				= node.title
 			|  >  
-			a(href='/' + nid + '/' + page.id) 
+			a(href='/' + node.id + '/' + page.id) 
 				= page.title
 		.sheet-container
 			h2
@@ -17,7 +17,7 @@ block main
 			mixin inputText(name, text)
 				label.control-label(for="input_#{name}") #{text}
 				.controls
-					input(type="text", id="input_#{name}", name="page[#{name}]", value="#{page[name]}")
+					input(type="text", id="input_#{name}", name="page[#{name}]", value="#{form[name]}")
 					span.help-inline #{errors[name]}
 			mixin inputControl(name, text)
 				- if (errors[name])
@@ -26,7 +26,7 @@ block main
 				- else
 					.control-group
 						mixin inputText(name, text)
-			form.form-horizontal(action='/set/#{nid}/#{pid}', method='post')
+			form.form-horizontal(action='/set/#{node.id}/#{page.id}', method='post')
 				mixin inputControl('id', nodeUrl)
 				.control-group
 					.controls

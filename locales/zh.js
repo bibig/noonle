@@ -84,12 +84,13 @@
 	"remove current background": "移除当前背景",
 	"font": "字体",
 	"font size": "大小",
-	"customize css": "css自定义",
+	"customize css": "css样式定义",
 	"version": "版本",
 	"site status": "网站状态",
 	"node count": "节点数",
 	"page count": "页面数",
 	"nodes list": "nodes list",
 	"invalid email": "invalid email",
-	"root authorize": "root authorize"
+	"root authorize": "root authorize",
+	"sorry, something was wrong!": "对不起, 出错了!"
 }

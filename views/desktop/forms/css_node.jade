@@ -9,5 +9,5 @@ block main
 				= node.title
 		.sheet-container
 			include _alertErrors
-			- var _css = { action: '/css/' + node.id, target: 'node', css: node.extraCss}
+			- var _css = { action: '/css/' + node.id, target: 'node', css: form.extraCss}
 			include _css
